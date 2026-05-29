@@ -190,6 +190,8 @@ Before saying the workflow is done:
 - HTML and PDF reports are created and listed in the report manifest.
 - Permissions allow intended users to query tables and read report artifacts.
 
+For internal bank financial statement packages, hand the parsed and extracted tables to `databricks-bank-statement-auditor` before narrative analysis. The auditor should validate table footing, cross-table tie-outs, organization rollups, FTP schedules, and any available GL source-of-truth tie-outs before management commentary is written.
+
 ## Source Anchors
 
 Use these as the live documentation starting points when refreshing details:

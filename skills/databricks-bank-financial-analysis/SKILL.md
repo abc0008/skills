@@ -1,6 +1,6 @@
 ---
 name: databricks-bank-financial-analysis
-description: Produce structured monthly internal bank financial analysis inside a Databricks Genie Agent using extracted PDF financials as the baseline and the IBM Planning Analytics Finance ERP Genie Space for additional GL Fact and GL Transaction research. Use this whenever the user asks for bank monthly financials, MoM, QoQ, YTD vs Budget, YTD vs Goal, GL variance commentary, NIM/NIR/NIE drivers, loan/deposit trends, headcount story, anomalous GL transactions, asset quality, or internal bank management reporting. Pair with databricks-pdf-genie-report when PDFs need to be ingested or cited.
+description: Produce structured monthly internal bank financial analysis inside a Databricks Genie Agent using extracted PDF financials as the baseline and the IBM Planning Analytics Finance ERP Genie Space for additional GL Fact and GL Transaction research. Use this whenever the user asks for bank monthly financials, MoM, QoQ, YTD vs Budget, YTD vs Goal, GL variance commentary, NIM/NIR/NIE drivers, loan/deposit trends, headcount story, anomalous GL transactions, asset quality, or internal bank management reporting. Pair with databricks-pdf-genie-report when PDFs need to be ingested or cited, and use databricks-bank-statement-auditor first when the user asks to audit, foot, tie out, reconcile, or validate the statement package before writing commentary.
 ---
 
 # Databricks Bank Financial Analysis
@@ -154,6 +154,10 @@ When PDFs are not already parsed or table-loaded, invoke or follow `databricks-p
 
 If the PDF and Finance ERP Genie Space disagree, show both values, identify source and period differences, and do not silently pick one.
 
+## Pairing with Statement Audit Skill
+
+When the user asks to audit, foot, tie out, reconcile, validate, QA, or review the integrity of a financial statement package, use `databricks-bank-statement-auditor` before producing variance commentary. Treat unresolved footing, summary-to-detail, organization rollup, FTP, or GL tie-out exceptions as audit exceptions, not business drivers.
+
 ## References
 
 - Starting pattern: Anthropic financial-services `variance-commentary` skill.
@@ -161,4 +165,3 @@ If the PDF and Finance ERP Genie Space disagree, show both values, identify sour
   - https://github.com/anthropics/financial-services/tree/main/plugins/agent-plugins/earnings-reviewer/skills
   - https://github.com/anthropics/financial-services/tree/main/plugins/vertical-plugins/financial-analysis
 - Paired local skill: `/Users/alexcardell/AlexCoding_Local/.agents/skills/databricks-pdf-genie-report/SKILL.md`
-

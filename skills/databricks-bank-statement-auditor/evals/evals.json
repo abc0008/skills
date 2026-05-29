@@ -1,0 +1,23 @@
+{
+  "skill_name": "databricks-bank-statement-auditor",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Audit this uploaded monthly bank financial PDF package in Genie. Verify that the income statement non-interest expense summary ties to the supporting detail pages and flag any table footing or extraction issues.",
+      "expected_output": "An audit report with source coverage, footing tests, summary-to-detail tie-outs for non-interest expense, exception severity, tolerances, citations, and a pass/hold recommendation.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "The package includes branch, market, region, and consolidated bank profitability tables with FTP credits and charges. Audit whether organization rollups tie and whether FTP nets properly at the consolidated level.",
+      "expected_output": "An audit report focused on organization rollups and FTP tie-outs, including parent-child rollup math, allocation/elimination handling, FTP netting checks, exceptions, and follow-up questions.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "We extracted an Excel financial statement package into Delta tables with page, sheet, table, row, column, value, confidence, and citation fields. Audit the statement package against GL Fact where available and separate extraction issues from accounting exceptions.",
+      "expected_output": "A ledger-supported audit report that ties package values to GL Fact by period, scenario, organization, and account family, separates low-confidence extraction issues, and does not invent missing mappings.",
+      "files": []
+    }
+  ]
+}
