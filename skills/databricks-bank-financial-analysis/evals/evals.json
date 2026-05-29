@@ -1,0 +1,23 @@
+{
+  "skill_name": "databricks-bank-financial-analysis",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Create a May monthly financial analysis for our bank using extracted financial PDFs as the baseline. Include MoM and YTD vs Budget commentary, and query IBM Planning Analytics Finance ERP Genie Space where drivers are missing.",
+      "expected_output": "A time-first bank financial analysis with MoM and YTD sections, category order, PDF baseline sourcing, GL Fact/Transactions gap-fill instructions, and driver commentary.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Explain why non-interest expense was up month over month and identify anomalous GL transactions.",
+      "expected_output": "A response that starts with the PDF value if available, queries GL Fact for NIE account movements, queries GL Transactions for anomaly detail, and ties transactions back to the NIE driver story.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Build Databricks Genie Agent instructions for monthly bank financials that pair extracted PDFs with IBM Planning Analytics General Ledger Fact and General Ledger Transactions.",
+      "expected_output": "A Genie Agent instruction block with source hierarchy, Actuals default scenario, GL category filters, time-first/category-second structure, and no-invented-driver rule.",
+      "files": []
+    }
+  ]
+}

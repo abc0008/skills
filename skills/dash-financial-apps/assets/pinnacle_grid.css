@@ -1,0 +1,27 @@
+/* Pinnacle-branded AG Grid: navy header, white Arial header text, gray borders.
+   Place in your app's assets/ folder (Dash auto-loads it) and add
+   className="ag-theme-quartz pinnacle-grid" on the dag.AgGrid component. */
+.pinnacle-grid .ag-header {
+    background-color: #002855;
+}
+.pinnacle-grid .ag-header-cell-text {
+    color: #FFFFFF;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 600;
+}
+.pinnacle-grid .ag-header-icon,
+.pinnacle-grid .ag-icon {
+    color: #FFFFFF;
+}
+.pinnacle-grid {
+    --ag-border-color: #D9D9D9;
+    --ag-row-border-color: #D9D9D9;
+    --ag-font-family: Arial, Helvetica, sans-serif;
+    --ag-font-size: 13px;
+    --ag-foreground-color: #595959;
+}
+/* Pinned bottom (totals) row reads as a summary line */
+.pinnacle-grid .ag-floating-bottom {
+    font-weight: 700;
+    background-color: #E6F2F5;
+}

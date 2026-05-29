@@ -1,0 +1,29 @@
+{
+  "skill_name": "databricks-pdf-genie-report",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Design a Databricks workflow that ingests contract PDFs from a Unity Catalog volume, extracts renewal dates and termination terms, lets Genie answer questions, and outputs an HTML/PDF report with citations.",
+      "expected_output": "A production Databricks architecture using Unity Catalog, ai_parse_document V2, ai_extract with citations/confidence, Genie over a Gold table, retrieval over chunks, and a report artifact manifest.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "I uploaded a PDF to Genie and want to turn the data into a reusable table and recurring PDF report. What should I build?",
+      "expected_output": "A response that distinguishes ad hoc Genie file upload limits from durable ingestion, then recommends a governed Lakeflow/AI Functions pipeline and report generator.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "Create starter SQL for parsing PDF manuals with ai_parse_document V2, extracting structured JSON, and preparing search chunks for source-backed natural language questions.",
+      "expected_output": "SQL scaffolding with READ_FILES binary ingestion, ai_parse_document version 2.0, ai_extract version 2.1 options, ai_prep_search chunks, and validation notes.",
+      "files": []
+    },
+    {
+      "id": 4,
+      "prompt": "Adapt the databricks-solutions/databricks-blogposts 2026-04 Intelligent-document-processing repo so Genie can answer questions over extracted PDF data and the app can generate HTML and PDF reports.",
+      "expected_output": "A repo-specific adaptation plan that identifies demo, databricks_etl, databricks_app, productmanuals, bundle variables, productmanuals table names, and the missing report-generation extension.",
+      "files": []
+    }
+  ]
+}
