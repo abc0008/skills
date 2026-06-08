@@ -1,0 +1,6 @@
+# Runtime
+databricks-sdk>=0.30
+pyyaml>=6.0
+requests>=2.31
+# Dev/test (no live workspace needed)
+pytest>=8.0

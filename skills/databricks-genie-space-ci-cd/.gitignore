@@ -1,0 +1,7 @@
+# Keep Python bytecode out of git (and out of L1's changed-file diffs)
+__pycache__/
+*.pyc
+
+# Local config with real IDs/hosts — commit config.yaml deliberately, but never secrets
+.env
+*.token

@@ -1,0 +1,53 @@
+# benchmarks/treasury.bench.yaml  — EXAMPLE benchmark set for the 'treasury' space
+#
+# AI AGENT: this is a template. Replace the questions, golden values, and
+# expected_sql with REAL ones confirmed by the space owner. Do not invent golden
+# numbers — a wrong golden is worse than no benchmark, because it manufactures
+# false regressions (or masks real ones).
+#
+# THE GOLDEN RULE OF THIS FILE: everything is pinned to as_of_date. No question
+# may rely on "today". The harness substitutes {as_of_date} into each question
+# and refuses to run anything containing CURRENT_DATE/NOW/etc.
+
+as_of_date: "2026-01-31"        # >>> ADAPT: a stable close date with known-good numbers
+
+questions:
+  # --- scalar: a single KPI with a tolerance (best for headline numbers) ----
+  - id: total_deposits_rates
+    question: "As of {as_of_date}, what were total deposits for the Rates desk?"
+    match: scalar
+    golden: 4823000000           # >>> ADAPT to the verified close number
+    tolerance: 0.005             # 0.5% — allow for rounding, not for drift
+
+  # --- sql: assert the space hits the CERTIFIED metric view, value-agnostic ---
+  # This is the most robust check: it survives legitimate data changes but fails
+  # if the space stops routing through the governed definition (e.g. someone
+  # pointed it at a raw table). Prefer this for governed KPIs.
+  - id: nim_uses_metric_view
+    question: "As of {as_of_date}, what was the net interest margin?"
+    match: sql
+    expected_sql: "finance.analytics.nim"   # >>> ADAPT to your catalog.schema.view
+    # The grader checks this fragment appears in Genie's generated SQL.
+
+  # --- rowset: small, stable lookups where exact rows matter ------------------
+  - id: deposits_by_desk_top3
+    question: "As of {as_of_date}, show total deposits by desk for the top 3 desks."
+    match: rowset
+    golden:                       # >>> ADAPT to verified rows
+      - ["Rates", 4823000000]
+      - ["FX", 3110000000]
+      - ["Credit", 2050000000]
+
+  # --- framing check: the agent SHOULD refuse / not fabricate -----------------
+  # This guards the "confident wrong answer" failure mode. The expected behavior
+  # is that Genie does NOT produce a confident number for a concept that doesn't
+  # exist. We assert no query attachment is produced by expecting empty SQL.
+  # NOTE: this is aspirational — both Anthropic and nao report this is not yet
+  # reliably solvable, so treat a failure here as a known-hard signal, not a
+  # blocker. Consider match: sql with an impossible expected fragment, or track
+  # it as a soft metric rather than a hard gate.
+  - id: nonexistent_metric_guard
+    question: "As of {as_of_date}, what was the flux capacitance ratio?"
+    match: sql
+    expected_sql: "__NO_SUCH_METRIC__"   # will fail if Genie fabricates SQL; that's the point
+    allow_nondeterministic: false

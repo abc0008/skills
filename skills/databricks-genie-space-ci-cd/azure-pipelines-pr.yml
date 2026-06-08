@@ -1,0 +1,79 @@
+# ==============================================================================
+# azure-pipelines-pr.yml  —  L1 PREVENTIVE GATE (runs on every pull request)
+# ==============================================================================
+# WHAT THIS IS
+#   An Azure DevOps pipeline that runs check_colocation.py on every PR targeting
+#   main. If a model changed without its dependent metric view / Genie space,
+#   the script exits non-zero, this pipeline FAILS, and — when set as a required
+#   branch-protection check — the PR cannot be merged.
+#
+# HOW TO WIRE IT (one-time, done by a human in the Azure DevOps UI):
+#   1. Pipelines -> New pipeline -> Azure Repos Git -> pick this repo ->
+#      "Existing Azure Pipelines YAML file" -> select this file's path.
+#   2. Repos -> Branches -> main -> Branch policies -> Build validation ->
+#      add THIS pipeline as a REQUIRED check. This is what actually blocks
+#      merges; the pipeline alone only reports. (Branch policy = the teeth.)
+#   3. Create a Variable Group named 'databricks-genie' (Pipelines -> Library)
+#      containing DATABRICKS_HOST and DATABRICKS_TOKEN (service-principal token).
+#      L1 doesn't strictly need workspace access (it's pure git+config), but the
+#      group is shared with the nightly pipeline, so define it once.
+#
+# >>> ADAPT: branch name if your trunk isn't 'main'; the YAML file path; the
+#            variable group name; python version if your agents pin one.
+# ==============================================================================
+
+trigger: none            # do NOT run on pushes to branches; this is PR-only
+
+pr:
+  branches:
+    include:
+      - main             # >>> ADAPT if trunk differs
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: databricks-genie     # >>> ADAPT name to your Variable Group
+
+steps:
+  # ----------------------------------------------------------------------------
+  # We need history for both the PR branch and the target branch so the script
+  # can diff them. Azure DevOps shallow-clones by default; fetch the target.
+  # ----------------------------------------------------------------------------
+  - checkout: self
+    fetchDepth: 0                # full history so 'origin/main...HEAD' resolves
+    displayName: "Checkout (full history for diff)"
+
+  - script: |
+      git fetch origin main:refs/remotes/origin/main   # >>> ADAPT branch
+    displayName: "Fetch target branch for diff base"
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.11'        # >>> ADAPT to your standard
+    displayName: "Use Python 3.11"
+
+  - script: pip install --quiet -r requirements-dev.txt
+    displayName: "Install deps"
+
+  - script: PYTHONPATH=ci python -m pytest -q
+    displayName: "Unit tests (offline, mocked Databricks)"
+
+  # ----------------------------------------------------------------------------
+  # Pull the PR description so the script can honor 'drift-ack:' escape-hatch
+  # lines. The PR body is available as a predefined variable on PR builds.
+  # If it's empty (e.g. manual run), the script just sees no acks.
+  # ----------------------------------------------------------------------------
+  - script: |
+      python ci/check_colocation.py \
+        --base origin/main \
+        --ack-text "$(Build.SourceVersionMessage)"
+    displayName: "L1 — colocation gate"
+    env:
+      PYTHONPATH: ci          # so `import _core` / `import databricks_helpers` resolve
+      LOG_LEVEL: INFO
+    # >>> ADAPT: --base branch. Note: Build.SourceVersionMessage carries the
+    #            merge commit message on PR builds; if your team writes
+    #            drift-ack lines in the PR DESCRIPTION rather than the commit,
+    #            fetch the description via the Azure DevOps REST API in a prior
+    #            step and pass it here instead.

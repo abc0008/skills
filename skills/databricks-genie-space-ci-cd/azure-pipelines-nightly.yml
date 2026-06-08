@@ -1,0 +1,110 @@
+# ==============================================================================
+# azure-pipelines-nightly.yml  —  L2 DETECTIVE AUDIT (runs on a nightly schedule)
+# ==============================================================================
+# WHAT THIS IS
+#   A scheduled Azure DevOps pipeline that runs audit_drift.py against the live
+#   workspace and compares every managed Genie space + metric view to the repo
+#   blueprint. If anything was changed out-of-band (a UI edit), the run FAILS
+#   and opens an Azure DevOps work item for the governance team.
+#
+# WHY A SCHEDULE, NOT A TRIGGER
+#   Drift from UI edits has no git event to hook, so there is nothing to trigger
+#   on. We sweep on a timer instead. Nightly is the usual cadence; tighten to
+#   hourly for high-stakes spaces if a day of silent drift is too much exposure.
+#
+# HOW TO WIRE IT (one-time, human, in Azure DevOps UI):
+#   1. Pipelines -> New pipeline -> point at this YAML file.
+#   2. The 'schedules:' block below drives the cron. (You can ALSO set a UI
+#      schedule under the pipeline's "Triggers", but YAML-as-code is preferred.)
+#   3. Reuse the 'databricks-genie' Variable Group; it must include:
+#        DATABRICKS_HOST, DATABRICKS_TOKEN  (service principal; CAN EDIT on the
+#        managed spaces, SELECT on the metric views)
+#      and for work-item creation:
+#        AZDO_ORG_URL, AZDO_PROJECT, AZDO_PAT  (PAT with Work Items: Read&Write)
+#      Store AZDO_PAT and DATABRICKS_TOKEN as SECRET variables.
+#
+# >>> ADAPT: cron time/zone; the --env you audit (prod); variable group name;
+#            whether to --open-workitem (leave on in prod).
+# ==============================================================================
+
+trigger: none            # never on push
+pr: none                 # never on PR
+
+schedules:
+  - cron: "0 6 * * *"    # 06:00 UTC daily. >>> ADAPT to your timezone/window.
+    displayName: "Nightly Genie drift audit"
+    branches:
+      include:
+        - main           # audit the blueprints as they exist on main
+    always: true         # run even if main hasn't changed since last run
+
+pool:
+  vmImage: ubuntu-latest
+
+variables:
+  - group: databricks-genie      # >>> ADAPT name
+
+steps:
+  - checkout: self
+    displayName: "Checkout main (blueprints to compare against)"
+
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.11'        # >>> ADAPT
+    displayName: "Use Python 3.11"
+
+  - script: pip install --quiet -r requirements-dev.txt
+    displayName: "Install deps"
+
+  # ----------------------------------------------------------------------------
+  # Run the audit against PROD. The script exits 3 on drift, which fails the
+  # step (and the run) so it's visible in the pipeline dashboard / email alerts.
+  # --open-workitem makes it also file a governance ticket per drifted object.
+  # ----------------------------------------------------------------------------
+  - script: |
+      python ci/audit_drift.py --env prod --open-workitem
+    displayName: "L2 — nightly drift audit (prod)"
+    env:
+      PYTHONPATH: ci
+      LOG_LEVEL: INFO
+      DATABRICKS_HOST: $(DATABRICKS_HOST)
+      DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+      AZDO_ORG_URL: $(AZDO_ORG_URL)
+      AZDO_PROJECT: $(AZDO_PROJECT)
+      AZDO_PAT: $(AZDO_PAT)
+    # >>> ADAPT: audit additional environments by adding more steps with
+    #            --env staging, etc. Map secrets explicitly via 'env:' so the
+    #            script's os.environ lookups resolve on the agent.
+
+  # ----------------------------------------------------------------------------
+  # L2b — BEHAVIORAL regression. Asks each space its benchmark questions and
+  # grades the answers against golden results. Catches "right definition, wrong
+  # answer" (upstream data changed, metric subtly mis-specified) that the
+  # structural audit above cannot see.
+  #
+  # ORDERING: runs AFTER the structural audit. We use 'condition: always()' so a
+  # structural-drift failure in the prior step does not skip the behavioral
+  # check — you want to see both signals in one run.
+  #
+  # DETERMINISM: run_benchmarks.py refuses any question containing CURRENT_DATE/
+  # NOW/etc. Each benchmark file pins an as_of_date. This is non-negotiable; an
+  # unpinned benchmark reports a fake regression every night.
+  #
+  # RATE LIMIT: the Genie conversation API free tier is ~5 questions/min/
+  # workspace, so the script throttles between questions. A large benchmark set
+  # will therefore take minutes — size the job timeout accordingly.
+  # ----------------------------------------------------------------------------
+  - script: |
+      python ci/run_benchmarks.py --env prod --open-workitem
+    displayName: "L2b — benchmark regression (date-pinned)"
+    condition: always()        # run even if the structural audit failed
+    env:
+      PYTHONPATH: ci
+      LOG_LEVEL: INFO
+      DATABRICKS_HOST: $(DATABRICKS_HOST)
+      DATABRICKS_TOKEN: $(DATABRICKS_TOKEN)
+      AZDO_ORG_URL: $(AZDO_ORG_URL)
+      AZDO_PROJECT: $(AZDO_PROJECT)
+      AZDO_PAT: $(AZDO_PAT)
+    # >>> ADAPT: if your benchmark set is large, raise the job timeout:
+    #   add 'timeoutInMinutes: 60' at the job/pipeline level.

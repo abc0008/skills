@@ -1,0 +1,63 @@
+# config.yaml  —  the dependency map (THE ONE FILE A HUMAN FILLS IN BY HAND)
+#
+# This file tells the L1 gate "what depends on what" so it can decide whether a
+# PR that changes a model ALSO needed to change a downstream metric view or
+# Genie space. Without this map, L1 cannot know that editing instrument_dim.sql
+# should force a re-review of treasury.genie.json.
+#
+# AI AGENT: do NOT auto-generate the dependencies by guessing. Two correct ways
+# to populate this:
+#   1. Ask the human / the space author.
+#   2. Derive them programmatically from Unity Catalog lineage (preferred at
+#      scale). See databricks_helpers.lineage_downstream_of() for a starting
+#      point — but still have a human confirm the generated map the first time.
+#
+# >>> ADAPT: every value below is a placeholder. Replace all of them.
+
+workspace:
+  # The Databricks workspace these objects live in. Host only, no trailing slash.
+  host: "https://your-workspace.cloud.databricks.com"        # >>> ADAPT
+  # Warehouse used for DESCRIBE queries against metric views during the audit.
+  # This is env-specific; inject per-environment, do not hardcode prod here.
+  warehouse_id: "REPLACE_WITH_SQL_WAREHOUSE_ID"               # >>> ADAPT
+  # Unity Catalog catalog + schema where the metric views are registered.
+  catalog: "finance"                                          # >>> ADAPT
+  schema: "analytics"                                         # >>> ADAPT
+
+# Each metric view: which model files feed it. If any listed model changes in a
+# PR, the metric view YAML is expected to be re-reviewed (changed) in that PR.
+metric_views:
+  nim:                                                        # logical name -> nim.metricview.yaml
+    depends_on_models:
+      - models/instrument_dim.sql                             # >>> ADAPT
+      - models/rates_fact.sql                                 # >>> ADAPT
+  deposits:
+    depends_on_models:
+      - models/deposits_fact.sql                              # >>> ADAPT
+
+# Each Genie space: which metric views AND/OR model files it depends on.
+# Prefer listing metric views (the governed path). List a raw model only if the
+# space references a table directly.
+genie_spaces:
+  treasury:                                                   # logical name -> treasury.genie.json
+    # The real space_id in each environment. Used by audit + deploy to find the
+    # live object. Keep dev/prod separate; inject via env or a per-env config.
+    space_id_by_env:
+      dev:  "01ef...DEV_SPACE_ID"                             # >>> ADAPT
+      prod: "01ef...PROD_SPACE_ID"                            # >>> ADAPT
+    depends_on_metric_views:
+      - nim
+    depends_on_models: []        # usually empty if it only uses governed views
+  retail_deposits:
+    space_id_by_env:
+      dev:  "01ef...DEV_SPACE_ID"                             # >>> ADAPT
+      prod: "01ef...PROD_SPACE_ID"                            # >>> ADAPT
+    depends_on_metric_views:
+      - deposits
+    depends_on_models: []
+
+# Fields stripped before committing/diffing because they are environment- or
+# instance-specific (see README "#1 gotcha"). Extend if your export carries more.
+normalize:
+  strip_space_fields:   ["space_id", "created_at", "created_by", "updated_at", "warehouse_id"]
+  strip_view_fields:    ["owner", "created_at", "updated_at", "table_properties"]
