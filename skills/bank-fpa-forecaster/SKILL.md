@@ -92,10 +92,38 @@ The reviewer returns approve or revise-with-critique; one revision round is
 allowed, after which the forecast is presented with the review verdict and any
 open warnings attached. The end user always sees the review status.
 
+### Driver Linkage Map (mandatory)
+
+Every forecasted GL segment carries a pre-mapped set of driver candidates with
+an economic story, injected into the forecaster as `driverLinkageCandidates`.
+Each driver the forecaster emits must set `linkedTo` to one of those candidate
+names (or its scenario variable); off-map drivers require a justified deviation
+in the rationale, and the reasonability reviewer fails the driver-coherence
+check for any unlinked driver.
+
+| Segment family | Linked drivers |
+| --- | --- |
+| Loan balances | Producer hiring & production ramp; paydowns/payoffs (SOFR); regional GDP |
+| Deposit balances | Household/business liquidity (GDP); rate competition / beta (SOFR); producer deposit production |
+| Interest income | Average loan balances (loan forecast); SOFR + portfolio spread |
+| Interest expense | Average deposit balances (deposit forecast); deposit beta × SOFR |
+| Personnel / comp | Headcount FTE (hiring plan); wage inflation |
+| Occupancy / equipment | Lease escalators / CPI (expense inflation) |
+| Technology / data processing | Key vendor inflation; project portfolio (management assumption) |
+| Marketing / BD / T&E / community | Discretionary spend plan (management assumption) |
+| Service charges / NSF | Transaction deposit accounts (deposit forecast) |
+| Card fees | Consumer spend volume (GDP) |
+| Mortgage revenue | Mortgage rates, inverse (SOFR) |
+| Wealth / trust / brokerage | Market levels / AUM (GDP) |
+| Capital markets / swaps | Deal activity (GDP) |
+| Provision | Scenario loss rate × loan balances (creditLoss) |
+| BOLI / intangibles | Management assumption (flat) |
+| Unmapped | Trailing run-rate trend; expense inflation |
+
 ### Output Contract
 
 Respond with only JSON: `methodologyBucket`, `method`, `narrative`, `drivers`
-(name/value/rationale), `annual` ([{year, valueMM}] starting at the stub year),
-`confidence`. Balances are EOP $MM; flows are full-year $MM. The host computes
-deltas vs the prior-cycle plan and maps them into planning levers — never emit
-lever values directly.
+(name/value/rationale/linkedTo), `annual` ([{year, valueMM}] starting at the
+stub year), `confidence`. Balances are EOP $MM; flows are full-year $MM. The
+host computes deltas vs the prior-cycle plan and maps them into planning
+levers — never emit lever values directly.
