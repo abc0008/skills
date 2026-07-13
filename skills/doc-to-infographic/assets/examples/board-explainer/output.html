@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>M&amp;A Target Diligence Framework — Visual Explainer</title>
+<style>
+  /* ============================================================
+     DESIGN SYSTEM — modern corporate.
+     ============================================================ */
+  :root{
+    --ink:#16202e; --muted:#5a6b7e; --faint:#8a98a8;
+    --line:#e4e9f0; --bg:#ffffff; --panel:#f6f8fb;
+    --accent:#1f4e79; --accent-soft:#e9f0f8;
+    --accent-2:#2f8f8f; --accent-2-soft:#e6f3f3;
+    --good:#2f7d4f; --good-soft:#e8f3ec;
+    --warn:#b3770c; --warn-soft:#f7efdd;
+    --bad:#b5443a;  --bad-soft:#f7e7e5;
+    --cat-fin:#1f4e79;   --cat-fin-soft:#e9f0f8;
+    --cat-risk:#b5443a;  --cat-risk-soft:#f7e7e5;
+    --cat-legal:#6b4ea0; --cat-legal-soft:#efe9f6;
+    --cat-tech:#2f8f8f;  --cat-tech-soft:#e6f3f3;
+    --cat-people:#b3770c;--cat-people-soft:#f7efdd;
+    --cat-rev:#2f7d4f;   --cat-rev-soft:#e8f3ec;
+    --cat-fund:#3b5b8c;  --cat-fund-soft:#e7eefb;
+    --cat-imo:#9a5b2a;   --cat-imo-soft:#f3e8dd;
+    --radius:12px; --radius-sm:8px;
+    --shadow:0 1px 2px rgba(16,32,46,.06), 0 6px 20px rgba(16,32,46,.05);
+    --maxw:980px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+       line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px 80px}
+
+  header.doc{padding:48px 0 28px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .eyebrow{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+           font-weight:600;margin:0 0 10px}
+  h1{font-size:34px;line-height:1.2;font-weight:700;margin:0 0 12px;letter-spacing:-.01em}
+  .dek{font-size:18px;color:var(--muted);max-width:64ch;margin:0}
+  .meta{margin-top:16px;font-size:13px;color:var(--faint);display:flex;gap:18px;flex-wrap:wrap}
+
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);
+          backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid var(--line);
+          margin:0 -24px 32px;padding:10px 24px;display:flex;gap:6px;overflow-x:auto}
+  nav.toc a{font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap;
+            padding:6px 12px;border-radius:99px;transition:.15s}
+  nav.toc a:hover{background:var(--panel);color:var(--ink)}
+  nav.toc a.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+
+  section{margin:44px 0;scroll-margin-top:64px}
+  .takeaway{font-size:22px;font-weight:600;line-height:1.3;margin:0 0 6px;letter-spacing:-.01em}
+  .lead{font-size:15px;color:var(--muted);margin:0 0 20px;max-width:70ch}
+  .caption{font-size:14px;color:var(--muted);margin:14px 0 0;max-width:72ch}
+  .caption strong{color:var(--ink);font-weight:600}
+  .note{font-size:12.5px;color:var(--faint);margin-top:8px}
+
+  .card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+        padding:18px 20px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(16,32,46,.08),0 12px 30px rgba(16,32,46,.08)}
+  .panel{background:var(--panel);border-radius:var(--radius);padding:20px 22px}
+
+  .summary{background:var(--accent-soft);border:1px solid #d4e2f0;border-radius:var(--radius);
+           padding:22px 24px;margin:24px 0 8px}
+  .summary h2{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);
+              margin:0 0 8px;font-weight:600}
+  .summary p{margin:0;font-size:16px;color:var(--ink);max-width:74ch}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .stat{border-top:3px solid var(--c,var(--accent))}
+  .stat .top{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .stat .num{font-size:30px;font-weight:700;color:var(--c,var(--accent));line-height:1.1}
+  .stat .lbl{font-size:13px;color:var(--muted);margin-top:6px}
+
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+        padding:3px 10px;border-radius:99px;background:var(--panel);color:var(--muted)}
+  .pill.accent{background:var(--accent-soft);color:var(--accent)}
+  .pill.good{background:var(--good-soft);color:var(--good)}
+  .pill.warn{background:var(--warn-soft);color:var(--warn)}
+  .pill.bad{background:var(--bad-soft);color:var(--bad)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:10px 0 0}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+  .ic{width:1em;height:1em;display:inline-block;vertical-align:-.125em;fill:none;
+      stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .ichip{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;
+         justify-content:center;font-size:20px;flex:none}
+  .ichip.fin{background:var(--cat-fin-soft);color:var(--cat-fin)}
+  .ichip.risk{background:var(--cat-risk-soft);color:var(--cat-risk)}
+  .ichip.legal{background:var(--cat-legal-soft);color:var(--cat-legal)}
+  .ichip.tech{background:var(--cat-tech-soft);color:var(--cat-tech)}
+  .ichip.people{background:var(--cat-people-soft);color:var(--cat-people)}
+  .ichip.rev{background:var(--cat-rev-soft);color:var(--cat-rev)}
+  .ichip.fund{background:var(--cat-fund-soft);color:var(--cat-fund)}
+  .ichip.imo{background:var(--cat-imo-soft);color:var(--cat-imo)}
+  .ichip.ink{background:var(--accent-soft);color:var(--accent)}
+
+  details.more{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+  details.more>summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent);
+                       list-style:none;display:inline-flex;align-items:center;gap:6px}
+  details.more>summary::-webkit-details-marker{display:none}
+  details.more>summary::before{content:"+";font-size:15px;line-height:1}
+  details.more[open]>summary::before{content:"–"}
+  details.more .body{margin-top:12px}
+
+  svg{display:block;max-width:100%;height:auto}
+  .scroller{overflow-x:auto}
+
+  /* ---- gated process flow (ordinal steps + inline decisions) ---- */
+  .pgf{display:grid;gap:0}
+  .pgf .ph{display:grid;grid-template-columns:40px minmax(210px,300px) 1fr;gap:14px;align-items:stretch}
+  .pgf .rail{display:flex;flex-direction:column;align-items:center}
+  .pgf .mark{width:34px;height:34px;border-radius:50%;background:var(--c);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex:none}
+  .pgf .mark.dec{border-radius:6px;transform:rotate(45deg)} .pgf .mark.dec span{transform:rotate(-45deg)}
+  .pgf .line{width:2px;flex:1;background:var(--line);min-height:30px}
+  .pgf .ph:last-child .line{display:none}
+  .pgf .node{border:1px solid var(--line);border-left:4px solid var(--c);border-radius:var(--radius-sm);padding:11px 13px;box-shadow:var(--shadow);margin-bottom:16px;display:flex;gap:10px;align-items:flex-start}
+  .pgf .node .t{font-weight:600;font-size:14px} .pgf .node .d{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .pgf .side{display:flex;align-items:center;margin-bottom:16px}
+  .pgf .gate{font-size:11px;font-weight:600;color:var(--warn);background:var(--warn-soft);padding:3px 10px;border-radius:99px}
+  .pgf .dec-out{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+  .pgf .dec-out .lead{font-size:11px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.03em;margin:0}
+  .pgf .oc{font-size:11.5px;font-weight:600;color:#fff;padding:4px 11px;border-radius:99px}
+  .pgf .oc.go{background:var(--good)} .pgf .oc.warn{background:var(--warn)} .pgf .oc.bad{background:var(--bad)} .pgf .oc.alt{background:var(--accent)}
+  .pgf .ai{width:24px;height:13px;flex:none}
+
+  /* ---- spine / backbone (FP&A through-line + feeders) ---- */
+  .spine{display:grid;gap:12px}
+  .spine .feeders{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;align-items:center}
+  .spine .fl{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.03em}
+  .spine .fchip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:5px 11px;border-radius:99px;border:1px solid var(--line);background:var(--bg)}
+  .spine .fchip .ic{font-size:14px}
+  .spine .fa{display:flex;justify-content:center;color:#9aa7b6}
+  .spine .track{background:var(--cat-fin-soft);border:1px solid #d4e2f0;border-radius:14px;padding:14px 16px}
+  .spine .lab{font-size:11px;font-weight:700;color:var(--cat-fin);text-transform:uppercase;letter-spacing:.04em;display:flex;align-items:center;gap:8px;margin-bottom:10px}
+  .spine .flow{display:flex;align-items:stretch;overflow-x:auto}
+  .spine .ws{flex:1 0 0;min-width:150px;background:var(--bg);border:1px solid #d4e2f0;border-top:3px solid var(--cat-fin);border-radius:8px;padding:10px 12px;margin-right:30px;position:relative;box-shadow:var(--shadow)}
+  .spine .ws:last-child{margin-right:0}
+  .spine .ws .ph{font-size:10px;font-weight:700;color:var(--cat-fin);text-transform:uppercase}
+  .spine .ws .t{font-size:13px;font-weight:600;margin:2px 0} .spine .ws .d{font-size:11px;color:var(--muted)}
+  .spine .ws::after{content:"";position:absolute;right:-26px;top:50%;width:18px;height:2px;transform:translateY(-50%);background:repeating-linear-gradient(90deg,var(--cat-fin) 0 6px,transparent 6px 11px);background-size:22px 2px;animation:spm 1.1s linear infinite}
+  .spine .ws::before{content:"";position:absolute;right:-8px;top:50%;transform:translateY(-50%);border-left:6px solid var(--cat-fin);border-top:4px solid transparent;border-bottom:4px solid transparent}
+  .spine .ws:last-child::after,.spine .ws:last-child::before{display:none}
+  @keyframes spm{to{background-position:22px 0}}
+  @media (prefers-reduced-motion:reduce){.spine .ws::after{animation:none}}
+
+  /* ---- grouped convergence (category + owner -> outcome) ---- */
+  .conv{display:grid;gap:12px}
+  .conv .groups{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;align-items:start}
+  .conv .g{border:1px solid var(--line);border-top:3px solid var(--c);border-radius:var(--radius-sm);overflow:hidden;background:var(--bg)}
+  .conv .g h5{margin:0;padding:9px 12px;font-size:12px;font-weight:700;color:var(--c);background:var(--cs);display:flex;align-items:center;gap:7px}
+  .conv .g h5 .ic{font-size:15px}
+  .conv .g .it{padding:9px 12px;border-top:1px solid var(--line);font-size:12px}
+  .conv .g .it .o{font-size:10.5px;color:var(--muted);margin-top:1px}
+  .conv .cvr{display:flex;justify-content:center;color:#9aa7b6}
+  .conv .decision{background:var(--accent);color:#fff;border-radius:var(--radius-sm);padding:13px 16px;display:flex;align-items:center;justify-content:center;gap:11px;font-weight:600;font-size:14px}
+  .conv .decision small{display:block;font-weight:400;opacity:.85;font-size:11.5px}
+  .conv .decision .ic{font-size:20px}
+
+  /* ---- phase swimlane matrix ---- */
+  .pm{display:grid;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-width:820px}
+  .pm .row{display:grid;grid-template-columns:160px repeat(6,1fr);border-top:1px solid var(--line)}
+  .pm .row:first-child{border-top:0}
+  .pm .corner{background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:12px 13px;display:flex;align-items:center}
+  .pm .ph{background:var(--panel);padding:10px 11px;border-left:1px solid var(--line)}
+  .pm .ph .pn{font-weight:700;color:var(--accent);font-size:12px}
+  .pm .ph .pg{font-size:10px;color:var(--warn);font-weight:600;margin-top:2px}
+  .pm .who{display:flex;align-items:center;gap:8px;padding:12px 13px;font-size:12.5px;font-weight:600;color:var(--c);background:var(--panel);border-left:4px solid var(--c)}
+  .pm .who .ichip{width:28px;height:28px;font-size:16px;border-radius:7px}
+  .pm .cell{border-left:1px solid var(--line);border-top:2px solid var(--c);padding:11px 11px;font-size:11.5px;color:var(--ink);background:var(--bg)}
+  .pm .cell.e{display:flex;align-items:center;justify-content:center}
+  .pm .cell.e::before{content:"";width:16px;height:2px;background:var(--line);border-radius:2px}
+  .pm-flow{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);margin:0 0 8px}
+
+  /* ---- theme x owner matrix ---- */
+  .rmx{display:grid;border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;min-width:720px}
+  .rmx .row{display:grid;grid-template-columns:248px repeat(7,1fr);border-top:1px solid var(--line)}
+  .rmx .row:first-child{border-top:0}
+  .rmx .hc{padding:9px 4px;text-align:center;font-size:10px;font-weight:700;background:var(--panel);border-left:1px solid var(--line);color:var(--hc)}
+  .rmx .corner{background:var(--ink);color:#fff;font-size:11.5px;font-weight:600;padding:10px 12px;display:flex;align-items:center}
+  .rmx .th{padding:10px 12px;font-size:12.5px;font-weight:500;background:var(--bg);display:flex;align-items:center}
+  .rmx .c{border-left:1px solid var(--line);display:flex;align-items:center;justify-content:center;background:var(--bg)}
+  .rmx .d{width:14px;height:14px;border-radius:50%}
+  .rmx .d.lead{box-shadow:0 0 0 3px rgba(0,0,0,.06)}
+
+  /* ---- phase timeline (weekly cadence) ---- */
+  .ptl{display:flex;align-items:stretch;overflow-x:auto;padding:6px 0}
+  .ptl .ph{flex:0 0 auto;width:166px;background:var(--bg);border:1px solid var(--line);border-top:3px solid var(--c);
+    border-radius:var(--radius-sm);padding:13px;margin-right:36px;position:relative;box-shadow:var(--shadow)}
+  .ptl .ph:last-child{margin-right:0}
+  .ptl .ph .wk{font-size:11px;font-weight:700;color:var(--c);text-transform:uppercase;letter-spacing:.03em}
+  .ptl .ph .ichip{width:34px;height:34px;font-size:19px;border-radius:9px;margin:8px 0}
+  .ptl .ph .t{font-weight:600;font-size:14px} .ptl .ph .d{font-size:11.5px;color:var(--muted);margin-top:2px}
+  .ptl .ph .gate{display:inline-block;margin-top:9px;font-size:10.5px;font-weight:600;color:var(--warn);background:var(--warn-soft);padding:2px 8px;border-radius:99px}
+  .ptl .ph .subs{display:flex;flex-direction:column;gap:4px;margin:8px 0 2px}
+  .ptl .ph .sub{font-size:11px;color:var(--ink);background:var(--panel);border-radius:6px;padding:4px 8px;display:flex;gap:6px;align-items:center}
+  .ptl .ph .sub::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--c);flex:none}
+  .ptl .axis{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);margin-bottom:6px}
+  .ptl .ph::after{content:"";position:absolute;right:-32px;top:50%;width:24px;height:2px;transform:translateY(-50%);
+    background:repeating-linear-gradient(90deg,#9aa7b6 0 6px,transparent 6px 11px);background-size:22px 2px;animation:ptlm 1.1s linear infinite}
+  .ptl .ph::before{content:"";position:absolute;right:-10px;top:50%;transform:translateY(-50%);border-left:7px solid #9aa7b6;border-top:5px solid transparent;border-bottom:5px solid transparent}
+  .ptl .ph:last-child::after,.ptl .ph:last-child::before{display:none}
+  @keyframes ptlm{to{background-position:22px 0}}
+  @media (prefers-reduced-motion:reduce){.ptl .ph::after{animation:none}}
+
+  /* ---- 2x2 risk matrix ---- */
+  .mx{position:relative;aspect-ratio:1/.72;border-left:2px solid var(--line);border-bottom:2px solid var(--line);margin:8px 0 0;max-width:640px}
+  .mx .q{position:absolute;width:50%;height:50%;display:flex;align-items:flex-start;justify-content:flex-end;
+    font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.04em;padding:8px 10px}
+  .mx .q.tl{top:0;left:0;justify-content:flex-start} .mx .q.tr{top:0;right:0}
+  .mx .q.bl{bottom:0;left:0;align-items:flex-end;justify-content:flex-start} .mx .q.br{bottom:0;right:0;align-items:flex-end}
+  .mx .pt{position:absolute;transform:translate(-50%,50%);color:#fff;font-size:11.5px;
+    font-weight:600;padding:5px 10px;border-radius:99px;white-space:nowrap;box-shadow:var(--shadow)}
+  .mx .pt.risk{background:var(--bad)} .mx .pt.warn{background:var(--warn)} .mx .pt.fin{background:var(--accent)}
+  .mx .ax{position:absolute;font-size:12px;color:var(--muted)}
+
+  /* ---- motion layer ---- */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+  .reveal.in{opacity:1;transform:none}
+  [data-stagger]>*{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+  [data-stagger].in>*{opacity:1;transform:none}
+  .draw{stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);transition:stroke-dashoffset 1.1s ease}
+  .draw.in{stroke-dashoffset:0}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal,[data-stagger]>*{opacity:1!important;transform:none!important;transition:none!important}
+    .draw{stroke-dashoffset:0!important;transition:none!important}
+  }
+
+  @media print{
+    nav.toc{display:none}
+    .card,.summary{box-shadow:none}
+    section{break-inside:avoid}
+    body{font-size:12pt}
+    .reveal,[data-stagger]>*{opacity:1!important;transform:none!important}
+    .draw{stroke-dashoffset:0!important}
+  }
+  @media (max-width:640px){ h1{font-size:27px} .takeaway{font-size:19px} nav.toc{margin-bottom:20px} }
+</style>
+</head>
+<body>
+
+<!-- ===== ICON SPRITE ===== -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="ic-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 18.8c0-2.9 2.5-4.8 5.5-4.8s5.5 1.9 5.5 4.8"/><path d="M16 5.4a3 3 0 0 1 0 5.8"/><path d="M17.5 14.2c2.3.5 3.9 2 3.9 4.4"/></symbol>
+<symbol id="ic-bank" viewBox="0 0 24 24"><path d="M4 9.5 12 4l8 5.5"/><path d="M5.5 10v8M9.5 10v8M14.5 10v8M18.5 10v8"/><path d="M3.5 20.5h17"/></symbol>
+<symbol id="ic-file" viewBox="0 0 24 24"><path d="M7 3.5h7l4 4V20a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1z"/><path d="M14 3.5V8h4"/></symbol>
+<symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5c0 4.6 3 8.1 7 9.2 4-1.1 7-4.6 7-9.2V6l-7-3z"/></symbol>
+<symbol id="ic-scale" viewBox="0 0 24 24"><path d="M12 4v16M7 20h10"/><path d="M12 6.5 5.5 8.5M12 6.5l6.5 2"/><path d="M5.5 8.5 3 14a2.8 2.8 0 0 0 5 0L5.5 8.5z"/><path d="M18.5 8.5 16 14a2.8 2.8 0 0 0 5 0l-2.5-5.5z"/></symbol>
+<symbol id="ic-coins" viewBox="0 0 24 24"><circle cx="9" cy="9" r="5"/><path d="M14.4 4.6a5 5 0 0 1 0 9.4"/><path d="M7 14.6c.6 2.3 2.8 3.4 5.5 3.4"/></symbol>
+<symbol id="ic-trend" viewBox="0 0 24 24"><path d="M4 16l5-5 3 3 7.5-7.5"/><path d="M15.5 6.5H20v4.5"/></symbol>
+<symbol id="ic-server" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="7" rx="1.6"/><rect x="4" y="13" width="16" height="7" rx="1.6"/><path d="M7.5 7.5h.01M7.5 16.5h.01"/></symbol>
+<symbol id="ic-sitemap" viewBox="0 0 24 24"><rect x="9" y="3.5" width="6" height="4.5" rx="1"/><rect x="3.5" y="16" width="6" height="4.5" rx="1"/><rect x="14.5" y="16" width="6" height="4.5" rx="1"/><path d="M12 8v3.5M6.5 16v-2.5h11V16"/></symbol>
+<symbol id="ic-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7"/></symbol>
+<symbol id="ic-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4.4"/><circle cx="12" cy="12" r="1"/></symbol>
+<symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3.2 2"/></symbol>
+<symbol id="ic-flag" viewBox="0 0 24 24"><path d="M6 21V4M6 4.5h11l-2 3 2 3H6"/></symbol>
+<symbol id="ic-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6"/><path d="M15 15l5 5"/></symbol>
+<symbol id="ic-alert" viewBox="0 0 24 24"><path d="M12 4 2.8 20h18.4L12 4z"/><path d="M12 10v4.5M12 17.4h.01"/></symbol>
+<symbol id="ic-calc" viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M8 7.5h8M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 15.5h.01M12 15.5h.01M15.5 15.5v2.5M8.5 18h3.5"/></symbol>
+</defs></svg>
+
+<div class="wrap">
+
+  <!-- ============ HEADER ============ -->
+  <header class="doc">
+    <p class="eyebrow">Corporate development &middot; Board walkthrough</p>
+    <h1>The M&amp;A target diligence framework, at a glance</h1>
+    <p class="dek">How a commercial-bank acquisition is taken from first look to a bid decision — the phases, the people, the FP&amp;A spine that carries it, and the two real go/no-go calls along the way.</p>
+    <div class="meta"><span>Source: Commercial Banking M&amp;A Target Evaluation &amp; Due Diligence Framework</span><span>Internal corp-dev / finance use</span></div>
+  </header>
+
+  <!-- ============ SECTION NAV ============ -->
+  <nav class="toc" aria-label="Sections">
+    <a href="#summary" class="active">Summary</a>
+    <a href="#process">Process &amp; gates</a>
+    <a href="#swimlane">Who does what, when</a>
+    <a href="#spine">FP&amp;A spine</a>
+    <a href="#themes">Themes &amp; owners</a>
+    <a href="#timeline">Weekly track</a>
+    <a href="#decision">The decision</a>
+    <a href="#deliverables">Deliverables</a>
+    <a href="#risks">Key risks</a>
+  </nav>
+
+  <!-- ============ EXECUTIVE SUMMARY ============ -->
+  <section id="summary">
+    <div class="summary reveal">
+      <h2>The bottom line</h2>
+      <p>The framework exists to answer one question: <strong>should we acquire this target, at this price and terms?</strong> It runs a disciplined diligence process across six weekly phases and eight working groups, converging on a recommendation across five decision dimensions — with Finance / FP&amp;A as the economic spine that runs through every phase, turning each specialist team's findings into normalized earnings, revenue durability, and workforce durability.</p>
+    </div>
+    <!-- headline stats — colour-coded by category + icon; counts are taken directly from the source -->
+    <div class="stat-grid reveal" data-stagger style="margin-top:16px">
+      <div class="card stat" style="--c:var(--cat-fin)"><div class="top"><span class="ichip fin"><svg class="ic"><use href="#ic-clock"/></svg></span><div class="num"><span data-count="6">6</span></div></div><div class="lbl">Weekly phases, week 0 &rarr; week 5</div></div>
+      <div class="card stat" style="--c:var(--cat-people)"><div class="top"><span class="ichip people"><svg class="ic"><use href="#ic-users"/></svg></span><div class="num"><span data-count="8">8</span></div></div><div class="lbl">Core working groups</div></div>
+      <div class="card stat" style="--c:var(--cat-risk)"><div class="top"><span class="ichip risk"><svg class="ic"><use href="#ic-shield"/></svg></span><div class="num"><span data-count="11">11</span></div></div><div class="lbl">Recurring diligence themes</div></div>
+      <div class="card stat" style="--c:var(--cat-rev)"><div class="top"><span class="ichip rev"><svg class="ic"><use href="#ic-check"/></svg></span><div class="num"><span data-count="5">5</span></div></div><div class="lbl">Decision dimensions to clear</div></div>
+    </div>
+    <p class="note">Counts are drawn from the source framework (six-week illustrative timeline, eight core working groups, eleven core diligence themes, five decision dimensions). No financial figures are invented — the framework's cost-synergy and segment tables are placeholders (TBD) in the source.</p>
+  </section>
+
+  <!-- ============ GATED PROCESS FLOW ============ -->
+  <section id="process">
+    <h2 class="takeaway">Diligence moves through six phases — and only two of them are real go/no-go calls</h2>
+    <p class="lead">Every phase ends in a gate that focuses the next round of work. At two points the gate can actually change the deal's direction: the Phase&nbsp;1 target assessment and the Phase&nbsp;3 decision package.</p>
+
+    <div class="pgf reveal" data-stagger>
+      <div class="ph" style="--c:var(--cat-fin)"><div class="rail"><div class="mark"><span>0</span></div><div class="line"></div></div>
+        <div class="node"><span class="ichip fin"><svg class="ic"><use href="#ic-flag"/></svg></span><div><div class="t">Setup &amp; kick-off</div><div class="d">Obtain VDR access, hold kick-off, begin diligence procedures</div></div></div>
+        <div class="side"><span class="gate">gate &rarr; begin VDR review</span></div></div>
+
+      <div class="ph" style="--c:var(--cat-fin)"><div class="rail"><div class="mark dec"><span>1</span></div><div class="line"></div></div>
+        <div class="node"><span class="ichip fin"><svg class="ic"><use href="#ic-target"/></svg></span><div><div class="t">Target assessment &amp; requests</div><div class="d">Issue document &amp; question lists, memo template; score strategic fit</div></div></div>
+        <div class="side"><div class="dec-out"><p class="lead">decision</p>
+          <svg class="ai" width="24" height="13" viewBox="0 0 28 13"><path class="draw" d="M2 6.5H22" fill="none" stroke="#9aa7b6" stroke-width="2" marker-end="url(#pgf1)"/><defs><marker id="pgf1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa7b6"/></marker></defs></svg>
+          <span class="oc go">Continue</span><span class="oc warn">Narrow scope</span><span class="oc bad">Pause</span></div></div></div>
+
+      <div class="ph" style="--c:var(--cat-risk)"><div class="rail"><div class="mark"><span>2</span></div><div class="line"></div></div>
+        <div class="node"><span class="ichip risk"><svg class="ic"><use href="#ic-file"/></svg></span><div><div class="t">Deep diligence</div><div class="d">Working groups review VDR, hold targeted meetings, build the issue log</div></div></div>
+        <div class="side"><span class="gate">gate &rarr; final-round focus</span></div></div>
+
+      <div class="ph" style="--c:var(--cat-rev)"><div class="rail"><div class="mark"><span>3a</span></div><div class="line"></div></div>
+        <div class="node"><span class="ichip rev"><svg class="ic"><use href="#ic-trend"/></svg></span><div><div class="t">Draft the memo</div><div class="d">Finalize findings; quantify synergies and integration costs</div></div></div>
+        <div class="side"><span class="gate">gate &rarr; risk / opportunity summary</span></div></div>
+
+      <div class="ph" style="--c:var(--accent)"><div class="rail"><div class="mark dec"><span>3b</span></div><div class="line"></div></div>
+        <div class="node"><span class="ichip ink"><svg class="ic"><use href="#ic-check"/></svg></span><div><div class="t">Decision package</div><div class="d">Resolve final-round items; convert findings into LOI / bid support</div></div></div>
+        <div class="side"><div class="dec-out"><p class="lead">decision</p>
+          <svg class="ai" width="24" height="13" viewBox="0 0 28 13"><path class="draw" d="M2 6.5H22" fill="none" stroke="#9aa7b6" stroke-width="2" marker-end="url(#pgf2)"/><defs><marker id="pgf2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa7b6"/></marker></defs></svg>
+          <span class="oc go">Bid / LOI</span><span class="oc warn">Reprice</span><span class="oc bad">No-bid</span><span class="oc alt">Defer</span></div></div></div>
+
+      <div class="ph" style="--c:var(--cat-imo)"><div class="rail"><div class="mark"><span>5</span></div></div>
+        <div class="node"><span class="ichip imo"><svg class="ic"><use href="#ic-sitemap"/></svg></span><div><div class="t">LOI / bid &amp; hand-off</div><div class="d">Submit bid support package; carry open items into final-round diligence</div></div></div>
+        <div class="side"><span class="gate">gate &rarr; bid submitted</span></div></div>
+    </div>
+
+    <div class="legend" style="margin-top:14px">
+      <span><span class="dot" style="background:var(--accent)"></span>Diamond = real go/no-go gate (Phase&nbsp;1, Phase&nbsp;3)</span>
+      <span><span class="dot" style="background:var(--warn)"></span>Round = ordinal gate that focuses the next round</span>
+    </div>
+    <p class="caption"><strong>What to notice:</strong> the whole process is one sequence — the decisions are not a separate exercise. Most gates simply sharpen the next round of work; only the two diamonds (target assessment and the decision package) can send the deal toward <em>continue</em>, <em>reprice</em>, or <em>no-bid</em>.</p>
+    <details class="more"><summary>How the source maps to these phases</summary>
+      <div class="body"><p class="caption" style="margin-top:0">The framework's illustrative timeline runs Week&nbsp;0 (VDR access, kick-off) through Week&nbsp;5 (resolve final-round items, LOI/bid support). Phases&nbsp;1 and&nbsp;3 correspond to the two natural decision points: the early target-assessment / strategic-fit screen, and the final decision-ready synthesis where findings become a bid recommendation.</p></div>
+    </details>
+  </section>
+
+  <!-- ============ PHASE SWIMLANE MATRIX ============ -->
+  <section id="swimlane">
+    <h2 class="takeaway">Who does what, when — eight functions, moving left to right through the gates</h2>
+    <p class="lead">Each function owns a distinct deliverable in each phase. Read across a row to follow one team through the deal; read down a column to see what a given week demands of everyone.</p>
+
+    <div class="pm-flow"><span>Deal flows through the gates</span>
+      <svg width="150" height="14" viewBox="0 0 160 14"><path class="draw" d="M2 7H150" fill="none" stroke="var(--accent)" stroke-width="2.2" marker-end="url(#pmf)"/><defs><marker id="pmf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="var(--accent)"/></marker></defs></svg></div>
+
+    <div class="scroller"><div class="pm reveal" data-stagger>
+      <div class="row"><div class="corner">Function &#9656; phase</div>
+        <div class="ph"><div class="pn">0 &middot; Setup</div><div class="pg">wk 0</div></div>
+        <div class="ph"><div class="pn">1 &middot; Assess</div><div class="pg">wk 1 &middot; gate</div></div>
+        <div class="ph"><div class="pn">2 &middot; Review</div><div class="pg">wk 2&ndash;3</div></div>
+        <div class="ph"><div class="pn">3a &middot; Draft</div><div class="pg">wk 4</div></div>
+        <div class="ph"><div class="pn">3b &middot; Decide</div><div class="pg">wk 5 &middot; gate</div></div>
+        <div class="ph"><div class="pn">5 &middot; Bid</div><div class="pg">wk 5+</div></div></div>
+
+      <div class="row" style="--c:var(--cat-fin)"><div class="who"><span class="ichip fin"><svg class="ic"><use href="#ic-coins"/></svg></span>Finance / FP&amp;A</div>
+        <div class="cell">Model shell, kick-off</div><div class="cell">Score fit; question list</div><div class="cell">NLE, segment financials, normalize</div><div class="cell">Quantify synergies &amp; costs</div><div class="cell">Valuation, deal model</div><div class="cell">Bid support inputs</div></div>
+
+      <div class="row" style="--c:var(--cat-risk)"><div class="who"><span class="ichip risk"><svg class="ic"><use href="#ic-shield"/></svg></span>Risk &amp; Credit</div>
+        <div class="cell e"></div><div class="cell">Request credit data</div><div class="cell">Marks, classifieds, allowance</div><div class="cell">Risk register inputs</div><div class="cell">Downside views</div><div class="cell e"></div></div>
+
+      <div class="row" style="--c:var(--cat-fund)"><div class="who"><span class="ichip fund"><svg class="ic"><use href="#ic-bank"/></svg></span>Accounting</div>
+        <div class="cell e"></div><div class="cell">Policy &amp; data requests</div><div class="cell">Historicals, one-time items</div><div class="cell">Purchase accounting</div><div class="cell">Confirm adjustments</div><div class="cell e"></div></div>
+
+      <div class="row" style="--c:var(--cat-legal)"><div class="who"><span class="ichip legal"><svg class="ic"><use href="#ic-scale"/></svg></span>Legal &amp; Audit</div>
+        <div class="cell e"></div><div class="cell">Structure, governance</div><div class="cell">Contracts, litigation, controls</div><div class="cell">Issue resolution</div><div class="cell">LOI / agreement support</div><div class="cell">Definitive terms</div></div>
+
+      <div class="row" style="--c:var(--cat-people)"><div class="who"><span class="ichip people"><svg class="ic"><use href="#ic-users"/></svg></span>Human Resources</div>
+        <div class="cell e"></div><div class="cell">Comp &amp; benefit requests</div><div class="cell">Employee NLE, retention risk</div><div class="cell">Key-people incentives</div><div class="cell">Severance &amp; stay costs</div><div class="cell e"></div></div>
+
+      <div class="row" style="--c:var(--cat-tech)"><div class="who"><span class="ichip tech"><svg class="ic"><use href="#ic-server"/></svg></span>Tech &amp; Operations</div>
+        <div class="cell e"></div><div class="cell">Systems inventory</div><div class="cell">Conversion &amp; cyber review</div><div class="cell">Integration cost estimate</div><div class="cell">Day-1 readiness</div><div class="cell">Integration plan</div></div>
+
+      <div class="row" style="--c:var(--cat-rev)"><div class="who"><span class="ichip rev"><svg class="ic"><use href="#ic-trend"/></svg></span>LOB Leaders</div>
+        <div class="cell e"></div><div class="cell">Strategic merits</div><div class="cell">Overlap &amp; cross-sell</div><div class="cell">Revenue synergy validation</div><div class="cell">Coverage model</div><div class="cell e"></div></div>
+    </div></div>
+    <p class="caption"><strong>What to notice:</strong> the Finance row is the only one populated end to end — it carries the analytical thread through every phase, while the specialist groups concentrate their work in the Phase&nbsp;2 review window. An empty cell means that function owns no distinct deliverable that phase.</p>
+    <p class="note">Functions reflect the source's eight core working groups (Accounting, Audit, Legal, Finance, HR, Risk &amp; Credit, Technology &amp; Operations, and relevant LOB leaders); Legal and Audit are paired here for the matrix.</p>
+  </section>
+
+  <!-- ============ FP&A ECONOMIC SPINE (SPINE / BACKBONE) ============ -->
+  <section id="spine">
+    <h2 class="takeaway">FP&amp;A is the economic spine — five workstreams run the length of the deal, and every specialist finding plugs into them</h2>
+    <p class="lead">The finance workstream is not one of the parallel teams; it is the through-line. Its five workstreams move left to right with the deal, and the specialist groups' findings — credit, deposits, regulatory, workforce, technology — feed <em>into</em> the band, where they convert into the numbers that drive the decision.</p>
+
+    <div class="spine reveal">
+      <div class="feeders"><span class="fl">Specialist findings feed in</span>
+        <span class="fchip" style="color:var(--cat-risk)"><svg class="ic"><use href="#ic-shield"/></svg>Credit &amp; portfolio</span>
+        <span class="fchip" style="color:var(--cat-fund)"><svg class="ic"><use href="#ic-bank"/></svg>Deposits &amp; funding</span>
+        <span class="fchip" style="color:var(--cat-legal)"><svg class="ic"><use href="#ic-scale"/></svg>Regulatory &amp; legal</span>
+        <span class="fchip" style="color:var(--cat-people)"><svg class="ic"><use href="#ic-users"/></svg>Workforce &amp; HR</span>
+        <span class="fchip" style="color:var(--cat-tech)"><svg class="ic"><use href="#ic-server"/></svg>Technology &amp; ops</span>
+      </div>
+      <div class="fa"><svg width="20" height="22" viewBox="0 0 20 22"><path class="draw" d="M10 2V18" fill="none" stroke="#9aa7b6" stroke-width="2" marker-end="url(#spf)"/><defs><marker id="spf" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa7b6"/></marker></defs></svg></div>
+      <div class="track">
+        <div class="lab"><span class="ichip fin" style="width:24px;height:24px;font-size:14px;border-radius:6px"><svg class="ic"><use href="#ic-sitemap"/></svg></span>FP&amp;A economic spine — others' findings convert here into the decision</div>
+        <div class="flow" data-stagger>
+          <div class="ws"><div class="ph">Phase 1</div><div class="t">Revenue durability</div><div class="d">Customer NLE; recurring vs one-time; concentration</div></div>
+          <div class="ws"><div class="ph">Phase 1&ndash;2</div><div class="t">Workforce durability</div><div class="d">Employee NLE; key people; comp vs revenue</div></div>
+          <div class="ws"><div class="ph">Phase 2</div><div class="t">Segment financials</div><div class="d">Income attribution; one-time adjustments; core operating profile</div></div>
+          <div class="ws"><div class="ph">Phase 2&ndash;3</div><div class="t">Synergies &amp; dis-synergies</div><div class="d">Cost &amp; revenue synergy; leakage; integration cost</div></div>
+          <div class="ws"><div class="ph">Phase 3</div><div class="t">Valuation &amp; deal model</div><div class="d">Normalized earnings power; multiple; bid support</div></div>
+        </div>
+      </div>
+    </div>
+    <p class="caption"><strong>What to notice:</strong> left to right is time (the workstreams advance with the phases); the blue band is the through-line; the feeder chips are the specialist findings that plug into segment financials and synergies and convert into valuation. A weak credit mark or a flight-risk producer doesn't stay in its own lane — it lands on the same FP&amp;A spine that hardens the deal model.</p>
+    <p class="note">The five workstreams are the source's finance and strategic-finance workstreams (Section&nbsp;8 and Section&nbsp;13): revenue durability, workforce durability, segment-level financials, synergies, and valuation support. No figures are invented — the underlying NLE, segment, and synergy tables are placeholders (TBD) in the source.</p>
+  </section>
+
+  <!-- ============ THEME x OWNER MATRIX ============ -->
+  <section id="themes">
+    <h2 class="takeaway">The recurring diligence themes don't map one-to-one — Finance is the hub, and several are co-owned</h2>
+    <p class="lead">The framework lists eleven core diligence themes. Mapping them to owners shows where work concentrates and where it is genuinely shared.</p>
+
+    <div class="scroller"><div class="rmx reveal" data-stagger>
+      <div class="row"><div class="corner">Theme &#9656; owner</div>
+        <div class="hc" style="--hc:var(--cat-fin)">Finance</div>
+        <div class="hc" style="--hc:var(--cat-risk)">Risk</div>
+        <div class="hc" style="--hc:var(--cat-fund)">Treasury</div>
+        <div class="hc" style="--hc:var(--cat-legal)">Legal</div>
+        <div class="hc" style="--hc:var(--cat-tech)">Tech</div>
+        <div class="hc" style="--hc:var(--cat-people)">HR</div>
+        <div class="hc" style="--hc:var(--cat-rev)">Comm.</div></div>
+
+      <div class="row"><div class="th">Strategic fit</div>
+        <div class="c"><span class="d lead" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"><span class="d" style="background:var(--cat-rev)"></span></div></div>
+
+      <div class="row"><div class="th">Normalized earnings power</div>
+        <div class="c"><span class="d lead" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div></div>
+
+      <div class="row"><div class="th">Revenue durability</div>
+        <div class="c"><span class="d lead" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"><span class="d" style="background:var(--cat-rev)"></span></div></div>
+
+      <div class="row"><div class="th">Workforce durability</div>
+        <div class="c"><span class="d" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"><span class="d lead" style="background:var(--cat-people)"></span></div><div class="c"></div></div>
+
+      <div class="row"><div class="th">Credit &amp; risk profile</div>
+        <div class="c"></div><div class="c"><span class="d lead" style="background:var(--cat-risk)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div></div>
+
+      <div class="row"><div class="th">Deposit &amp; funding quality</div>
+        <div class="c"><span class="d" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"><span class="d lead" style="background:var(--cat-fund)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div></div>
+
+      <div class="row"><div class="th">Regulatory &amp; compliance</div>
+        <div class="c"></div><div class="c"><span class="d" style="background:var(--cat-risk)"></span></div><div class="c"></div><div class="c"><span class="d lead" style="background:var(--cat-legal)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div></div>
+
+      <div class="row"><div class="th">Cost &amp; revenue synergies</div>
+        <div class="c"><span class="d lead" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"><span class="d" style="background:var(--cat-rev)"></span></div></div>
+
+      <div class="row"><div class="th">Integration complexity &amp; cost</div>
+        <div class="c"><span class="d" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"><span class="d lead" style="background:var(--cat-tech)"></span></div><div class="c"></div><div class="c"></div></div>
+
+      <div class="row"><div class="th">Valuation support</div>
+        <div class="c"><span class="d lead" style="background:var(--cat-fin)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div><div class="c"></div></div>
+
+      <div class="row"><div class="th">Final-round outstanding items</div>
+        <div class="c"><span class="d lead" style="background:var(--cat-fin)"></span></div><div class="c"><span class="d" style="background:var(--cat-risk)"></span></div><div class="c"></div><div class="c"><span class="d" style="background:var(--cat-legal)"></span></div><div class="c"></div><div class="c"></div><div class="c"></div></div>
+    </div></div>
+
+    <div class="legend" style="margin-top:12px">
+      <span><span class="d lead" style="background:var(--ink);width:14px;height:14px;border-radius:50%"></span>Lead owner</span>
+      <span><span class="d" style="background:var(--faint);width:14px;height:14px;border-radius:50%"></span>Co-owner</span>
+    </div>
+    <p class="caption"><strong>What to notice:</strong> read down the Finance column — it leads or co-owns most themes, making it the analytical spine of the process. Read across a row to see shared ownership: <strong>revenue durability</strong> and <strong>synergies</strong> are Finance with Commercial; <strong>final-round items</strong> pull in Risk and Legal too.</p>
+  </section>
+
+  <!-- ============ PHASE TIMELINE ============ -->
+  <section id="timeline">
+    <h2 class="takeaway">The weekly track: each phase ends in a gate, with named deliverables due before the next begins</h2>
+    <p class="lead">The framework's illustrative calendar runs six weeks. Every column carries its own sub-deliverables — not just a one-line label.</p>
+
+    <div class="axis"><span class="ichip ink" style="width:24px;height:24px;font-size:14px;border-radius:6px"><svg class="ic"><use href="#ic-clock"/></svg></span><span>Weekly cadence &mdash; time runs left to right; each phase ends in a gate before the next begins</span></div>
+    <div class="scroller"><div class="ptl reveal" data-stagger>
+      <div class="ph" style="--c:var(--cat-fin)"><div class="wk">Week 0 &middot; Setup</div><span class="ichip fin"><svg class="ic"><use href="#ic-flag"/></svg></span><div class="t">Kick-off</div>
+        <div class="subs"><span class="sub">VDR access</span><span class="sub">Kick-off meeting</span><span class="sub">Initial instructions</span></div><span class="gate">gate &rarr; begin diligence</span></div>
+
+      <div class="ph" style="--c:var(--cat-fin)"><div class="wk">Week 1 &middot; Requests</div><span class="ichip fin"><svg class="ic"><use href="#ic-target"/></svg></span><div class="t">Lists issued</div>
+        <div class="subs"><span class="sub">Document request list</span><span class="sub">Question list</span><span class="sub">Diligence memo template</span></div><span class="gate">gate &rarr; lists out</span></div>
+
+      <div class="ph" style="--c:var(--cat-risk)"><div class="wk">Week 2 &middot; Review</div><span class="ichip risk"><svg class="ic"><use href="#ic-search"/></svg></span><div class="t">VDR review</div>
+        <div class="subs"><span class="sub">Review VDR materials</span><span class="sub">Submit requests</span><span class="sub">Weekly update</span></div><span class="gate">gate &rarr; requests in</span></div>
+
+      <div class="ph" style="--c:var(--cat-risk)"><div class="wk">Week 3 &middot; Meet</div><span class="ichip risk"><svg class="ic"><use href="#ic-file"/></svg></span><div class="t">Targeted meetings</div>
+        <div class="subs"><span class="sub">Working-group meetings</span><span class="sub">Target / advisor sessions</span><span class="sub">Issue log</span></div><span class="gate">gate &rarr; follow-ups</span></div>
+
+      <div class="ph" style="--c:var(--cat-rev)"><div class="wk">Week 4 &middot; Draft</div><span class="ichip rev"><svg class="ic"><use href="#ic-trend"/></svg></span><div class="t">Draft memo</div>
+        <div class="subs"><span class="sub">Finalize findings</span><span class="sub">Quantify synergies</span><span class="sub">Risk / opportunity summary</span></div><span class="gate">gate &rarr; draft memo</span></div>
+
+      <div class="ph" style="--c:var(--accent)"><div class="wk">Week 5 &middot; Decide</div><span class="ichip ink"><svg class="ic"><use href="#ic-check"/></svg></span><div class="t">Final memo &amp; bid</div>
+        <div class="subs"><span class="sub">Resolve final-round items</span><span class="sub">Final diligence memo</span><span class="sub">LOI / bid support</span></div><span class="gate">gate &rarr; bid / no-bid</span></div>
+    </div></div>
+    <p class="caption"><strong>What to notice:</strong> the cadence is deliberately front-loaded on access and requests (weeks 0&ndash;1), gives the bulk of analytical time to review and meetings (weeks 2&ndash;3), and reserves the last two weeks for synthesis and the decision. The labelled chips are the actual deliverables the source attaches to each week.</p>
+  </section>
+
+  <!-- ============ CONVERGING INPUTS -> DECISION ============ -->
+  <section id="decision">
+    <h2 class="takeaway">Five decision dimensions all feed one call — none of them stands alone</h2>
+    <p class="lead">A decision-ready memo has to clear all five. The diagram shows them converging on the single recommendation, not sitting as separate scorecards.</p>
+
+    <div class="reveal"><svg width="100%" height="290" viewBox="0 0 640 290" role="img" aria-labelledby="cv-t cv-d">
+      <title id="cv-t">Five decision dimensions converge on the recommendation</title>
+      <desc id="cv-d">Strategic fit, financial return, revenue durability, workforce durability, and integration executability all feed the acquire decision.</desc>
+      <defs><marker id="cvA" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa7b6"/></marker></defs>
+      <style>
+        .cvb{fill:var(--bg);stroke-width:2} .cvt{font:600 12.5px var(--font);fill:var(--ink)}
+        .cvk{font:500 11px var(--font);fill:var(--muted)}
+        .cvtw{font:600 14px var(--font);fill:#fff} .cve{stroke:#9aa7b6;stroke-width:2;fill:none}
+      </style>
+      <path class="cve draw" d="M236 40C346 40 356 130 448 142" marker-end="url(#cvA)"/>
+      <path class="cve draw" d="M236 96C346 96 366 138 448 148" marker-end="url(#cvA)"/>
+      <path class="cve draw" d="M236 152H448" marker-end="url(#cvA)"/>
+      <path class="cve draw" d="M236 208C346 208 366 162 448 154" marker-end="url(#cvA)"/>
+      <path class="cve draw" d="M236 264C346 264 356 170 448 160" marker-end="url(#cvA)"/>
+      <g><rect class="cvb" x="8" y="18" width="228" height="44" rx="8" style="stroke:var(--accent)"/><text class="cvt" x="22" y="38">Strategic fit</text><text class="cvk" x="22" y="54">Improves the franchise?</text></g>
+      <g><rect class="cvb" x="8" y="74" width="228" height="44" rx="8" style="stroke:var(--cat-rev)"/><text class="cvt" x="22" y="94">Financial return</text><text class="cvk" x="22" y="110">Valuation, EPS, TBV earnback, ROIC</text></g>
+      <g><rect class="cvb" x="8" y="130" width="228" height="44" rx="8" style="stroke:var(--cat-fund)"/><text class="cvt" x="22" y="150">Revenue durability</text><text class="cvk" x="22" y="166">Customer NLE, recurring, concentration</text></g>
+      <g><rect class="cvb" x="8" y="186" width="228" height="44" rx="8" style="stroke:var(--cat-people)"/><text class="cvt" x="22" y="206">Workforce durability</text><text class="cvk" x="22" y="222">Employee NLE, key people, incentives</text></g>
+      <g><rect class="cvb" x="8" y="242" width="228" height="44" rx="8" style="stroke:var(--cat-tech)"/><text class="cvt" x="22" y="262">Integration executability</text><text class="cvk" x="22" y="278">Synergy plan, cost, open items</text></g>
+      <g><rect x="448" y="116" width="184" height="72" rx="12" fill="var(--accent)"/><text class="cvtw" x="540" y="146" text-anchor="middle">Acquire at this</text><text class="cvtw" x="540" y="166" text-anchor="middle">price &amp; terms?</text></g>
+    </svg></div>
+    <p class="caption"><strong>What to notice:</strong> the five arrows land on a single node — the framework is explicit that the recommendation must be clear "across five dimensions," so a strong score on one (say strategic fit) cannot rescue a weak read on another (say workforce durability). Each dimension's output is shown straight from the source's decision-ready table.</p>
+  </section>
+
+  <!-- ============ GROUPED CONVERGENCE (deliverables: category + owner -> memo) ============ -->
+  <section id="deliverables">
+    <h2 class="takeaway">The deliverables aren't a checklist — they cluster into five kinds, each owned, all feeding one memo</h2>
+    <p class="lead">Behind the five decision dimensions sits a set of concrete diligence outputs. Grouped by what they are, labelled with who produces them, they all converge into the final memo — and FP&amp;A owns or co-owns most of them, the spine again.</p>
+
+    <div class="conv reveal">
+      <div class="groups" data-stagger>
+        <div class="g" style="--c:var(--accent);--cs:var(--accent-soft)"><h5><svg class="ic"><use href="#ic-target"/></svg>Strategy</h5>
+          <div class="it">Strategic rationale &amp; merits<div class="o">Corp Dev / LOB leaders</div></div>
+          <div class="it">Market size &amp; overlap map<div class="o">Commercial / FP&amp;A</div></div></div>
+        <div class="g" style="--c:var(--cat-fin);--cs:var(--cat-fin-soft)"><h5><svg class="ic"><use href="#ic-coins"/></svg>Earnings &amp; valuation</h5>
+          <div class="it">Normalized earnings power<div class="o">Finance / FP&amp;A</div></div>
+          <div class="it">Segment-level financials<div class="o">Finance / FP&amp;A</div></div>
+          <div class="it">Valuation support &amp; deal model<div class="o">Finance / FP&amp;A</div></div></div>
+        <div class="g" style="--c:var(--cat-fund);--cs:var(--cat-fund-soft)"><h5><svg class="ic"><use href="#ic-bank"/></svg>Marks &amp; adjustments</h5>
+          <div class="it">Credit marks &amp; purchase accounting<div class="o">Risk &amp; Credit / Accounting</div></div>
+          <div class="it">One-time revenue &amp; expense adjustments<div class="o">Accounting / FP&amp;A</div></div></div>
+        <div class="g" style="--c:var(--cat-rev);--cs:var(--cat-rev-soft)"><h5><svg class="ic"><use href="#ic-trend"/></svg>Value capture</h5>
+          <div class="it">Synergy &amp; dis-synergy analysis<div class="o">Commercial / FP&amp;A</div></div>
+          <div class="it">Integration cost estimate<div class="o">Tech &amp; Operations</div></div>
+          <div class="it">Key-people &amp; incentive structure<div class="o">Human Resources / FP&amp;A</div></div></div>
+        <div class="g" style="--c:var(--cat-risk);--cs:var(--cat-risk-soft)"><h5><svg class="ic"><use href="#ic-alert"/></svg>Risk</h5>
+          <div class="it">Risk &amp; opportunity register<div class="o">All groups / Legal &amp; Reg</div></div>
+          <div class="it">Final-round outstanding items<div class="o">Finance / FP&amp;A</div></div></div>
+      </div>
+      <div class="cvr"><svg width="60%" height="26" viewBox="0 0 240 26" preserveAspectRatio="none"><path class="draw" d="M14 2H226 M40 2V13 M120 2V13 M200 2V13 M120 13V22" fill="none" stroke="#9aa7b6" stroke-width="2" marker-end="url(#cv5c)"/><defs><marker id="cv5c" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa7b6"/></marker></defs></svg></div>
+      <div class="decision"><svg class="ic"><use href="#ic-flag"/></svg><div>Final due diligence memo — bid / no-bid / reprice / defer<small>FP&amp;A, for the IC / board</small></div></div>
+    </div>
+    <p class="caption"><strong>What to notice:</strong> the grouping carries the <em>kind</em> of work (strategy, earnings &amp; valuation, marks, value capture, risk); the label under each line carries the <em>owner</em>; the funnel carries the <em>dependency</em> — every output rolls up into one memo. FP&amp;A appears as owner or co-owner in four of the five groups: the deliverables converge on the same spine that runs the deal.</p>
+    <p class="note">Deliverables and owners are drawn from the source's due-diligence memo template (Section&nbsp;7), key deliverables list (Section&nbsp;6.3), and decision-ready framework (Section&nbsp;14). No synergy, mark, or valuation figures are invented — those tables are placeholders (TBD) in the source.</p>
+  </section>
+
+  <!-- ============ 2x2 RISK MATRIX ============ -->
+  <section id="risks">
+    <h2 class="takeaway">Key risks sort by likelihood and impact — the people and revenue risks dominate the high-impact corner</h2>
+    <p class="lead">The framework's risk register groups risks by revenue durability, workforce durability, and financial profile. Placed on likelihood &times; impact, they point to where mitigation effort belongs.</p>
+
+    <div class="reveal"><div class="mx" role="img" aria-label="Risk matrix plotting key diligence risks by likelihood (horizontal) and impact (vertical). Key-producer attrition and revenue concentration sit high-impact and higher-likelihood (mitigate now); integration cost overrun and regulatory approval sit high-impact, lower-likelihood (plan for); one-time revenue overstatement and incentive disruption sit lower-impact (monitor or accept).">
+      <div class="q tl">Monitor</div><div class="q tr">Mitigate now</div>
+      <div class="q bl">Accept</div><div class="q br">Plan for</div>
+      <div class="pt risk" style="left:74%;top:16%">Key-producer attrition</div>
+      <div class="pt risk" style="left:66%;top:34%">Revenue concentration</div>
+      <div class="pt warn" style="left:36%;top:24%">Integration cost overrun</div>
+      <div class="pt warn" style="left:30%;top:42%">Regulatory approval</div>
+      <div class="pt fin" style="left:60%;top:68%">One-time revenue overstates run-rate</div>
+      <div class="pt fin" style="left:34%;top:80%">Incentive plan disruption</div>
+      <div class="ax" style="left:50%;bottom:-24px;transform:translateX(-50%)">Likelihood &rarr;</div>
+      <div class="ax" style="left:-12px;top:50%;transform:rotate(-90deg) translateX(50%);transform-origin:left">Impact &rarr;</div>
+    </div></div>
+
+    <div class="legend" style="margin-top:30px">
+      <span><span class="dot" style="background:var(--bad)"></span>Revenue / workforce durability risk</span>
+      <span><span class="dot" style="background:var(--warn)"></span>Integration &amp; regulatory risk</span>
+      <span><span class="dot" style="background:var(--accent)"></span>Financial-profile / quality-of-earnings risk</span>
+    </div>
+    <p class="caption"><strong>What to notice:</strong> the highest-impact, most-likely risks — key-producer attrition and revenue concentration — are exactly the ones the framework's Finance and HR workstreams (NLE analysis, key-people incentives) are designed to size and mitigate. Position here reflects the source's risk categories, not measured probabilities.</p>
+    <p class="note">Placement is illustrative of the source's risk categories; the framework does not assign numeric likelihood or impact scores.</p>
+  </section>
+
+  <footer style="margin-top:56px;padding-top:18px;border-top:1px solid var(--line);
+                 font-size:12.5px;color:var(--faint)">
+    Generated from the <em>Commercial Banking M&amp;A Target Evaluation &amp; Due Diligence Framework</em>. The framework is a structure, not a populated deal: cost-synergy, segment-financial, and scoring figures are placeholders (TBD) in the source and are not invented here. Risk and convergence placements illustrate the source's stated categories, not measured values.
+  </footer>
+
+</div>
+
+<script>
+  /* Light interactivity + motion. Page is fully legible with JS disabled. */
+  (function(){
+    var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+    var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+    if('IntersectionObserver' in window && secs.length){
+      var nav=new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){
+          var id='#'+e.target.id;
+          links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')===id);});
+        }});
+      },{rootMargin:'-45% 0px -50% 0px'});
+      secs.forEach(function(s){nav.observe(s);});
+    }
+
+    var rev=[].slice.call(document.querySelectorAll('.reveal,[data-stagger]'));
+    if(RM || !('IntersectionObserver' in window)){
+      rev.forEach(function(e){e.classList.add('in');});
+    } else {
+      var ro=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){
+        var el=e.target;
+        if(el.hasAttribute('data-stagger')){
+          [].slice.call(el.children).forEach(function(c,i){c.style.transitionDelay=(i*80)+'ms';});
+        }
+        el.classList.add('in'); ro.unobserve(el);
+      }});},{rootMargin:'0px 0px -10% 0px'});
+      rev.forEach(function(e){ro.observe(e);});
+    }
+
+    var dp=[].slice.call(document.querySelectorAll('.draw'));
+    dp.forEach(function(p){ try{ if(p.getTotalLength){p.style.setProperty('--len',Math.ceil(p.getTotalLength()));} }catch(e){} });
+    if(RM || !('IntersectionObserver' in window)){ dp.forEach(function(p){p.classList.add('in');}); }
+    else { var dio=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');dio.unobserve(e.target);} });},{rootMargin:'0px 0px -10% 0px'});
+      dp.forEach(function(p){dio.observe(p);}); }
+
+    var nums=[].slice.call(document.querySelectorAll('[data-count]'));
+    var run=function(el){var t=parseFloat(el.getAttribute('data-count'))||0,d=900,s=null;
+      var step=function(ts){if(!s)s=ts;var p=Math.min((ts-s)/d,1);
+        el.textContent=(t%1?(p*t).toFixed(1):Math.round(p*t));
+        if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);};
+    if(RM || !('IntersectionObserver' in window)){ nums.forEach(function(e){e.textContent=e.getAttribute('data-count');}); }
+    else { var cio=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){run(e.target);cio.unobserve(e.target);} });});
+      nums.forEach(function(e){e.textContent='0';cio.observe(e);}); }
+  })();
+</script>
+</body>
+</html>
