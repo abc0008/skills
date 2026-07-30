@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-labelledby="title desc">
+  <title id="title">Mosaic M</title>
+  <desc id="desc">An uppercase M assembled from navy mosaic tiles with a blue center inlay.</desc>
+  <style>
+    .back { fill: #EEF0F1; }
+    .letter { fill: #14385C; }
+    .accent { fill: #0074C4; }
+      .field-0 { fill: #D4D4D1; }
+      .field-1 { fill: #C8CDD0; }
+      .field-2 { fill: #BFC6CC; }
+      .field-3 { fill: #D0D2D3; }
+      .field-4 { fill: #C3C7C3; }
+    @media (prefers-color-scheme: dark) {
+      .back { fill: #0B1E2E; }
+      .letter { fill: #F4F7F8; }
+        .field-0 { fill: #173047; }
+        .field-1 { fill: #1C3850; }
+        .field-2 { fill: #244259; }
+        .field-3 { fill: #142A3E; }
+        .field-4 { fill: #29465D; }
+    }
+  </style>
+  <rect class="back" width="72" height="72" rx="12" fill="#EEF0F1"/>
+  <rect class="field field-0" x="3.200" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="field field-3" x="10.600" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="field field-1" x="18.000" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="field field-4" x="25.400" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-2" x="32.800" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="field field-0" x="40.200" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="field field-3" x="47.600" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="field field-1" x="55.000" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="field field-4" x="62.400" y="3.200" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-2" x="3.200" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="letter" x="10.600" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-0" x="18.000" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="field field-4" x="25.400" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-3" x="32.800" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="field field-2" x="40.200" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="field field-1" x="47.600" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="letter" x="55.000" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="62.400" y="10.600" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="3.200" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="letter" x="10.600" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="letter" x="18.000" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="25.400" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="32.800" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="40.200" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="letter" x="47.600" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="letter" x="55.000" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="62.400" y="18.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-1" x="3.200" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="letter" x="10.600" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-3" x="18.000" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="accent" x="25.400" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#0074C4"/>
+  <rect class="field field-0" x="32.800" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="accent" x="40.200" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#0074C4"/>
+  <rect class="field field-2" x="47.600" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="letter" x="55.000" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="62.400" y="25.400" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-3" x="3.200" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="letter" x="10.600" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-2" x="18.000" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="field field-4" x="25.400" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="accent" x="32.800" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#0074C4"/>
+  <rect class="field field-3" x="40.200" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="field field-0" x="47.600" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="letter" x="55.000" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="62.400" y="32.800" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-0" x="3.200" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="letter" x="10.600" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-1" x="18.000" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="field field-4" x="25.400" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-2" x="32.800" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="field field-0" x="40.200" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="field field-3" x="47.600" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="letter" x="55.000" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="62.400" y="40.200" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-2" x="3.200" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="letter" x="10.600" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-0" x="18.000" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="field field-4" x="25.400" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-3" x="32.800" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="field field-2" x="40.200" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="field field-1" x="47.600" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="letter" x="55.000" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="62.400" y="47.600" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="3.200" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="letter" x="10.600" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="18.000" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="25.400" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="32.800" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="40.200" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-4" x="47.600" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="letter" x="55.000" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#14385C"/>
+  <rect class="field field-4" x="62.400" y="55.000" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-1" x="3.200" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="field field-2" x="10.600" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="field field-3" x="18.000" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="field field-4" x="25.400" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+  <rect class="field field-0" x="32.800" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#D4D4D1"/>
+  <rect class="field field-1" x="40.200" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#C8CDD0"/>
+  <rect class="field field-2" x="47.600" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#BFC6CC"/>
+  <rect class="field field-3" x="55.000" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#D0D2D3"/>
+  <rect class="field field-4" x="62.400" y="62.400" width="6.400" height="6.400" rx="0.65" fill="#C3C7C3"/>
+</svg>

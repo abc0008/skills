@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>mosaic 3C.4N — brand asset proof</title>
+  <style>
+    :root {
+      --canvas: #e9e9e8;
+      --paper: #fbfbfa;
+      --ink: #121212;
+      --navy: #14385c;
+      --muted: #62696e;
+      --line: rgba(20,56,92,.16);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }
+    main {
+      width: min(1280px, calc(100% - 56px));
+      margin: 0 auto;
+      padding: 54px 0 72px;
+    }
+    .eyebrow, .label {
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .eyebrow {
+      margin: 0 0 12px;
+      color: var(--navy);
+      font-size: 11px;
+      font-weight: 700;
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(38px, 5vw, 62px);
+      font-weight: 540;
+      letter-spacing: -.045em;
+    }
+    .intro {
+      max-width: 810px;
+      margin: 16px 0 34px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.55;
+    }
+    .stack { display: grid; gap: 24px; }
+    .card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: var(--paper);
+    }
+    .card-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--line);
+    }
+    .label { color: var(--muted); font-size: 10px; }
+    .tag {
+      color: white;
+      background: var(--ink);
+      border-radius: 999px;
+      padding: 3px 9px;
+      font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .stage {
+      display: flex;
+      min-height: 310px;
+      align-items: center;
+      justify-content: center;
+      padding: 52px;
+    }
+    .stage img { display: block; width: min(920px, 100%); height: auto; }
+    .stage.footer { min-height: 170px; justify-content: flex-start; }
+    .stage.footer img { width: min(340px, 65%); }
+    .stage.mono { background: #f1f1f0; }
+    .stage.dark { background: #121212; }
+    .meta {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px 20px;
+      color: var(--muted);
+      background: rgba(20,56,92,.035);
+      border-top: 1px solid var(--line);
+      font: 10px ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font: 11px/1.6 ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    @media (max-width: 640px) {
+      main { width: min(100% - 28px, 1280px); padding-top: 32px; }
+      .stage { min-height: 220px; padding: 30px 20px; }
+      .meta { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <p class="eyebrow">mosaic · 3C.4N · production assets</p>
+    <h1>Micro tessera · navy inlay</h1>
+    <p class="intro">The exact micro-tessera construction of 3C.4 with
+      3C.2’s deep-navy base lettering. The blue a·i remains distinct, but the
+      full wordmark feels cooler and more institutional.</p>
+
+    <div class="stack">
+      <section class="card">
+        <div class="card-head"><span class="label">Primary · full color</span><span class="tag">3C.4N</span></div>
+        <div class="stage"><img src="mosaic-3c4n-primary.svg" alt="Primary mosaic wordmark"></div>
+        <div class="meta"><span>SVG master · transparent gaps</span><span>navy #14385C · blue #0074C4</span></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><span class="label">Footer scale</span><span class="tag">240W</span></div>
+        <div class="stage footer"><img src="mosaic-3c4n-footer.svg" alt="Footer-scale mosaic wordmark"></div>
+        <div class="meta"><span>Vector source · 240px PNG supplied</span><span>minimum recommended width: 180px</span></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><span class="label">Monochrome</span><span class="tag">1C</span></div>
+        <div class="stage mono"><img src="mosaic-3c4n-monochrome.svg" alt="Monochrome mosaic wordmark"></div>
+        <div class="meta"><span>graphite lettering · neutral field</span><span>for print and constrained outputs</span></div>
+      </section>
+
+      <section class="card">
+        <div class="card-head"><span class="label">On dark</span><span class="tag">REV</span></div>
+        <div class="stage dark"><img src="mosaic-3c4n-on-dark.svg" alt="Reversed mosaic wordmark"></div>
+        <div class="meta"><span>frost lettering · sky-blue a·i</span><span>proofed on #121212</span></div>
+      </section>
+    </div>
+
+    <footer>Deterministic SVG · no external assets · exact 3C.4N construction</footer>
+  </main>
+</body>
+</html>
