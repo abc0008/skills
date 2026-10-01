@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FlowDocument",
+  "type": "object",
+  "required": ["version", "createdAt", "flow"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "createdAt": { "type": "string" },
+    "flow": {
+      "type": "object",
+      "required": ["nodes", "edges", "viewport"],
+      "properties": {
+        "nodes": { "type": "array" },
+        "edges": { "type": "array" },
+        "viewport": {
+          "type": "object",
+          "required": ["x", "y", "zoom"],
+          "properties": {
+            "x": { "type": "number" },
+            "y": { "type": "number" },
+            "zoom": { "type": "number" }
+          }
+        }
+      }
+    }
+  }
+}
