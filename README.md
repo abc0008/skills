@@ -13,6 +13,8 @@ This repository contains Codex skill packages.
 - `cfin-nextjs-fdas-app-routes`: Next.js App Router shells for ACEAnalytics marketing pages, product routes, and the CFIN workspace in `cfin_new/nextjs-fdas`.
 - `databricks-genie-space-ci-cd`: Genie metric-drift defense — L1 PR colocation gates, L2 structural drift audits, L2b behavioral benchmarks, and repo-driven deploy for Databricks Genie spaces on Azure DevOps.
 
+- `reactflow-app-builder`: React Flow editors with custom nodes/edges, persistence, undo/redo, reference docs, helper scripts, and a starter app.
+
 ## Layout
 
 Each skill lives under `skills/<skill-name>/` and includes a `SKILL.md` entrypoint.

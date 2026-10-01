@@ -1,6 +1,6 @@
 ---
 name: reactflow-app-builder
-description: Builds or refactors React Flow (@xyflow/react) applications: custom nodes/edges, state management, persistence, and undo/redo. Use when the task involves React Flow diagrams, node-based editors, workflow builders, graph UI scaffolding, saving/restoring flows, or adding undo/redo to a flow editor. Do not use for generic React UI work that does not involve graphs/flows.
+description: "Builds or refactors React Flow (@xyflow/react) applications: custom nodes/edges, state management, persistence, and undo/redo. Use when the task involves React Flow diagrams, node-based editors, workflow builders, graph UI scaffolding, saving/restoring flows, or adding undo/redo to a flow editor. Do not use for generic React UI work that does not involve graphs/flows."
 license: MIT
 compatibility: Designed for Claude apps, Claude Code, Claude Agent SDK, and Skills API code execution. No network required for core workflows; includes offline template assets.
 metadata:
