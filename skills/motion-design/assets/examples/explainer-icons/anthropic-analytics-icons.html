@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Self-service analytics with Claude: explainer icons</title>
+<style>
+/* ===== motion-design base CSS ===== */
+:root{--paper:#f4efe4;--ink:#191919;--mute:#c9c2b2;--mute-text:#8d8676;--hl:#ffd60a;--mark:#e5381c;
+  --io:cubic-bezier(.645,.045,.355,1);--out:cubic-bezier(.165,.84,.44,1);--snap:cubic-bezier(.19,1,.22,1);
+  --font:"Helvetica Neue",Helvetica,Arial,sans-serif}
+.mo{display:block;background:var(--paper);color:var(--ink);font-family:var(--font)}
+svg.mo{width:100%;height:auto;overflow:visible}
+.mo text{font-family:var(--font);fill:currentColor}
+.mo .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.mo .pen{fill:none;stroke:var(--mark);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.xicon{--loop:5s}
+.xicon *{transform-box:view-box;transform-origin:0 0}
+.xicon .draw{stroke-dasharray:1;stroke-dashoffset:0}
+.xicon .a-all{animation-name:x-all}
+@keyframes x-all{0%{opacity:0}4%,95%{opacity:1}100%{opacity:0}}
+.xicon .ball{fill:var(--mark)}
+.xicon .glyph{fill:var(--mark);font:800 30px/1 var(--font);transform-box:fill-box;transform-origin:50% 60%}
+.xicon .c{transform-box:fill-box;transform-origin:50% 50%}
+.xicon [class*="a-"]{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:linear;animation-fill-mode:both}
+.mo.static [class*="d-"],.mo.static [class*="a-"]{animation:none!important}
+@media print,(prefers-reduced-motion:reduce){.mo [class*="d-"],.mo [class*="a-"]{animation:none!important}}
+
+/* ===== page ===== */
+*{box-sizing:border-box}
+body{margin:0;background:#ddd6c6;font-family:var(--font);color:var(--ink);padding:28px}
+header{max-width:1320px;margin:0 auto 20px}
+header h1{font-size:30px;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+header p{margin:0;color:#5f594c;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1320px;margin:0 auto}
+.card{background:var(--paper);padding:22px 22px 18px;display:flex;flex-direction:column}
+.card .k{font-size:12px;color:var(--mute-text);margin:0 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.card h2{font-size:20px;line-height:1.15;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.card .d{font-size:13.5px;line-height:1.4;color:#5f594c;margin:0 0 10px}
+.card .ic{width:210px;margin:auto auto 0}
+@media (max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}}
+
+
+/* ---- topical object kit ---- */
+.xicon .tbl rect.o{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .tbl .h{fill:currentColor}
+.xicon .tbl path{stroke:currentColor;stroke-width:1.5;fill:none}
+.xicon .chip rect{fill:var(--mark)}
+.xicon .chip text{fill:var(--paper);font:800 9.5px/1 var(--font);text-anchor:middle}
+.xicon .page rect.o{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .mag circle{fill:rgba(244,239,228,.55);stroke:var(--mark);stroke-width:3.5}
+.xicon .mag path{stroke:var(--mark);stroke-width:4;stroke-linecap:round}
+
+/* ===== 1. ambiguity: the word "active" vs three tables ===== */
+.amb .br{opacity:.4}.amb .tbl{opacity:.4}
+.amb .chip{transform:translate(42px,60px)}
+.amb .a-tr{animation-name:amb-tr}
+.amb .a-h1{animation-name:amb-fan,amb-h1}.amb .a-h2{animation-name:amb-fan,amb-h2}.amb .a-h3{animation-name:amb-fan,amb-h3}
+.amb .a-x1{animation-name:amb-h1}.amb .a-x2{animation-name:amb-h2}.amb .a-x3{animation-name:amb-h3}
+.amb .a-chip{animation-name:amb-chip}.amb .a-q{animation-name:amb-q}
+@keyframes amb-tr{0%{stroke-dashoffset:1;visibility:hidden}1%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}9%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes amb-fan{0%,8%{stroke-dashoffset:1;visibility:hidden}8.1%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}18%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes amb-h1{0%,33%{opacity:.4}38%,42%{opacity:1}47%,100%{opacity:.4}}
+@keyframes amb-h2{0%,47%{opacity:.4}52%,56%{opacity:1}61%,100%{opacity:.4}}
+@keyframes amb-h3{0%,61%{opacity:.4}66%,70%{opacity:1}75%,100%{opacity:.4}}
+@keyframes amb-chip{0%{transform:translate(22px,60px);opacity:0}5%{transform:translate(22px,60px);opacity:1}
+  18%{transform:translate(22px,60px);animation-timing-function:var(--io)}
+  30%,34%{transform:translate(42px,60px);animation-timing-function:var(--io)}
+  40%{transform:translate(54px,48px);animation-timing-function:var(--io)}46%,48%{transform:translate(42px,60px);animation-timing-function:var(--io)}
+  54%{transform:translate(57px,60px);animation-timing-function:var(--io)}60%,62%{transform:translate(42px,60px);animation-timing-function:var(--io)}
+  68%{transform:translate(54px,72px);animation-timing-function:var(--io)}74%{transform:translate(42px,60px)}
+  80%{transform:translate(40px,60px)}84%{transform:translate(44px,60px)}88%,100%{transform:translate(42px,60px)}}
+@keyframes amb-q{0%,75%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}81%,100%{opacity:1;transform:scale(1)}}
+
+/* ===== 2. staleness: the table gains columns, the doc still describes two ===== */
+.stl .newc{transform-box:fill-box;transform-origin:0 50%}
+.stl .newc rect.o{stroke:var(--mark)}.stl .newc .h{fill:var(--mark)}
+.stl .page{color:var(--mute-text)}
+.stl .lk{stroke-dasharray:.1 6;opacity:0}
+.stl .a-c1{animation-name:stl-c1}.stl .a-c2{animation-name:stl-c2}.stl .a-lk{animation-name:stl-lk}.stl .a-pg{animation-name:stl-pg}.stl .a-ring{animation-name:stl-ring}.stl .a-bang{animation-name:stl-bang}
+@keyframes stl-c1{0%,18%{transform:scaleX(0);animation-timing-function:var(--snap)}28%,100%{transform:scaleX(1)}}
+@keyframes stl-c2{0%,38%{transform:scaleX(0);animation-timing-function:var(--snap)}48%,100%{transform:scaleX(1)}}
+@keyframes stl-lk{0%,16%{opacity:1}24%,100%{opacity:0}}
+@keyframes stl-pg{0%,52%{color:var(--ink)}60%,100%{color:var(--mute-text)}}
+@keyframes stl-ring{0%,60%{stroke-dashoffset:1;visibility:hidden}61%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}73%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes stl-bang{0%,74%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}80%,100%{opacity:1;transform:scale(1)}}
+
+/* ===== 3. retrieval: the search passes the right table ===== */
+.ret .tbl{color:var(--mute-text)}.ret .tbl.right{color:var(--ink)}
+.ret .mag{transform:translate(95px,74px)}
+.ret .a-mg{animation-name:ret-mg}.ret .a-tg{animation-name:ret-tg}.ret .a-x{animation-name:ret-x}
+@keyframes ret-mg{0%,6%{transform:translate(2px,104px);animation-timing-function:var(--io)}18%,24%{transform:translate(27px,74px);animation-timing-function:var(--io)}34%,40%{transform:translate(61px,36px);animation-timing-function:var(--io)}50%,56%{transform:translate(61px,74px);animation-timing-function:var(--io)}66%,100%{transform:translate(95px,74px)}}
+@keyframes ret-tg{0%,78%{transform:scale(1)}84%{transform:scale(1.2)}90%,100%{transform:scale(1)}}
+@keyframes ret-x{0%,68%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}74%,100%{opacity:1;transform:scale(1)}}
+
+/* ---- more kit ---- */
+.xicon .lbl{font:800 8.5px/1 var(--font);letter-spacing:.05em;text-anchor:middle;fill:currentColor}
+.xicon .warn .t{fill:currentColor}.xicon .warn .i{stroke:var(--paper);stroke-width:2;stroke-linecap:round;fill:none}
+.xicon .spark{fill:var(--mark)}
+.xicon .bot rect{fill:currentColor}.xicon .bot circle{fill:var(--paper)}
+.xicon .pg rect{fill:var(--paper);stroke:currentColor;stroke-width:2}.xicon .pg path{stroke:currentColor;stroke-width:1.5;fill:none}
+.xicon .hl{fill:var(--hl)}
+
+/* ===== 4. three layers ===== */
+.lay .bar{stroke-width:6}
+.lay .warn{color:var(--mute-text)}
+.lay .w1{transform:translate(28px,30px)}.lay .w2{transform:translate(46px,60px)}.lay .w3{transform:translate(64px,90px)}
+.lay .a-l1{animation-name:lay-1}.lay .a-l2{animation-name:lay-2}.lay .a-l3{animation-name:lay-3}
+.lay .a-b1{animation-name:lay-b1}.lay .a-b2{animation-name:lay-b2}.lay .a-b3{animation-name:lay-b3}
+@keyframes lay-1{0%,10%{transform:translate(6px,30px);color:var(--mark)}30%{transform:translate(30px,30px);color:var(--mark)}35%{transform:translate(24px,30px);color:var(--mute-text)}40%,100%{transform:translate(28px,30px);color:var(--mute-text)}}
+@keyframes lay-2{0%,10%{transform:translate(6px,60px);color:var(--mark)}47%{transform:translate(48px,60px);color:var(--mark)}52%{transform:translate(42px,60px);color:var(--mute-text)}57%,100%{transform:translate(46px,60px);color:var(--mute-text)}}
+@keyframes lay-3{0%,10%{transform:translate(6px,90px);color:var(--mark)}64%{transform:translate(66px,90px);color:var(--mark)}69%{transform:translate(60px,90px);color:var(--mute-text)}74%,100%{transform:translate(64px,90px);color:var(--mute-text)}}
+@keyframes lay-b1{0%,29%{stroke:var(--ink)}32%{stroke:var(--mark)}42%,100%{stroke:var(--ink)}}
+@keyframes lay-b2{0%,46%{stroke:var(--ink)}49%{stroke:var(--mark)}59%,100%{stroke:var(--ink)}}
+@keyframes lay-b3{0%,63%{stroke:var(--ink)}66%{stroke:var(--mark)}76%,100%{stroke:var(--ink)}}
+
+/* ===== 5. semantic layer first ===== */
+.sem .box{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.sem .lo{color:var(--mute-text);opacity:.55}
+.sem .lo circle{fill:currentColor}.sem .lo path{stroke:currentColor;stroke-width:2;fill:none}
+.sem .lo .box{stroke-width:2}
+.sem .hl{transform-box:fill-box;transform-origin:0 50%}
+.sem .spark{transform:translate(32px,22px)}
+.sem .a-sp{animation-name:sem-sp}.sem .a-lo{animation-name:sem-lo}.sem .a-hl{animation-name:sem-hl}.sem .a-ck{animation-name:sem-ck}
+@keyframes sem-sp{0%,8%{transform:translate(14px,64px);animation-timing-function:var(--io)}26%,100%{transform:translate(32px,22px)}}
+@keyframes sem-lo{0%,28%{color:var(--ink);opacity:1}38%,100%{color:var(--mute-text);opacity:.55}}
+@keyframes sem-hl{0%,30%{transform:scaleX(0);animation-timing-function:var(--io)}40%,100%{transform:scaleX(1)}}
+@keyframes sem-ck{0%,44%{stroke-dashoffset:1;visibility:hidden}45%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}54%,100%{stroke-dashoffset:0;visibility:visible}}
+
+/* ===== 6. skill routes the question ===== */
+.rtr .w{opacity:.3;stroke-width:2}
+.rtr .pg{color:var(--mute-text)}
+.rtr .hit{color:var(--ink)}.rtr .hit rect{fill:var(--hl)}
+.rtr .qc circle{fill:var(--mark)}.rtr .qc text{fill:var(--paper);font:800 12px/1 var(--font);text-anchor:middle}
+.rtr .qc{transform:translate(79px,40px)}
+.rtr .a-rb{animation-name:rtr-b}.rtr .a-sk{animation-name:rtr-sk}.rtr .a-w{animation-name:rtr-w}.rtr .a-hit{animation-name:rtr-hit}.rtr .a-hf{animation-name:rtr-hf}
+@keyframes rtr-b{0%,8%{transform:translate(8px,60px);animation-timing-function:var(--io)}20%,30%{transform:translate(24px,60px);animation-timing-function:var(--io)}38%{transform:translate(66px,60px);animation-timing-function:var(--snap)}54%,100%{transform:translate(79px,40px)}}
+@keyframes rtr-sk{0%,20%{transform:scale(1)}25%{transform:scale(1.1)}30%,100%{transform:scale(1)}}
+@keyframes rtr-w{0%,36%{opacity:.3;stroke:var(--ink)}42%,100%{opacity:1;stroke:var(--mark)}}
+@keyframes rtr-hit{0%,52%{color:var(--mute-text);transform:scale(1)}58%{color:var(--ink);transform:scale(1.25)}64%,100%{color:var(--ink);transform:scale(1)}}
+@keyframes rtr-hf{0%,52%{fill:var(--paper)}58%,100%{fill:var(--hl)}}
+
+/* ===== 7. adversarial review ===== */
+.adv .gate{stroke-width:5}
+.adv .mv{transform:translate(94px,73px)}
+.adv .a-ab{animation-name:adv-b}.adv .a-ap{animation-name:adv-p}.adv .a-af{animation-name:adv-f}.adv .a-g{animation-name:adv-g}.adv .a-ck{animation-name:adv-ck}
+@keyframes adv-b{0%,6%{transform:translate(22px,73px);animation-timing-function:var(--io)}20%{transform:translate(50px,73px);animation-timing-function:var(--out)}28%,42%{transform:translate(28px,73px);animation-timing-function:var(--io)}54%,58%{transform:translate(50px,73px);animation-timing-function:var(--io)}72%,100%{transform:translate(94px,73px)}}
+@keyframes adv-p{0%,34%{transform:scale(1)}38%{transform:scale(1.2)}42%,100%{transform:scale(1)}}
+@keyframes adv-f{0%,21%{fill:var(--mark)}27%,34%{fill:var(--mute-text)}38%,100%{fill:var(--mark)}}
+@keyframes adv-g{0%,19%{transform:translate(0,0)}21%{transform:translate(2.5px,0)}23%{transform:translate(-2.5px,0)}25%{transform:translate(2.5px,0)}27%,52%{transform:translate(0,0);animation-timing-function:var(--io)}58%,70%{transform:translate(0,-30px);animation-timing-function:var(--io)}76%,100%{transform:translate(0,0)}}
+@keyframes adv-ck{0%,76%{stroke-dashoffset:1;visibility:hidden}77%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}85%,100%{stroke-dashoffset:0;visibility:visible}}
+
+/* ===== 8. corrections flow back into the docs ===== */
+.cor .arc{opacity:.35;stroke-width:2;stroke-dasharray:.1 6}
+.cor .bub{fill:var(--paper);stroke:currentColor;stroke-width:2.5;stroke-linejoin:round}
+.cor .ans{opacity:0}.cor .ans path{stroke-width:3.5}
+.cor .fix{transform:translate(27px,68px)}.cor .fix path{stroke-width:3.5}
+.cor .no{font-size:18px}
+.cor .a-ans{animation-name:cor-ans}.cor .a-fix{animation-name:cor-fix}.cor .a-no{animation-name:cor-no}
+@keyframes cor-ans{0%,8%{transform:translate(27px,58px);opacity:0}9%{transform:translate(27px,58px);opacity:1}14%{transform:translate(44px,44px)}20%{transform:translate(56px,32px)}26%{transform:translate(68px,29px)}32%{transform:translate(82px,33px)}37%{transform:translate(92px,42px);opacity:1}40%,100%{transform:translate(96px,50px);opacity:0}}
+@keyframes cor-no{0%,40%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}46%,100%{opacity:1;transform:scale(1)}}
+@keyframes cor-fix{0%,48%{transform:translate(92px,78px);opacity:0}49%{transform:translate(92px,78px);opacity:1}55%{transform:translate(80px,89px)}61%{transform:translate(67px,92px)}67%{transform:translate(54px,88px)}73%{transform:translate(44px,78px);animation-timing-function:var(--out)}82%,100%{transform:translate(27px,68px);opacity:1}}
+</style>
+</head>
+<body>
+<header><h1>How Anthropic enables self-service data analytics with Claude</h1><p>Eight animated explainer icons, drawn with the subject's own objects. Headlines and figures are taken from the article.</p></header>
+<div class="grid">
+
+  <div class="card"><p class="k">Failure mode 1</p><h2>One word, several possible entities</h2>
+    <p class="d">Concept-entity ambiguity: a term like "active" maps to more than one thing in the data model.</p>
+    <div class="ic"><svg class="mo xicon amb" data-name="t1_ambiguity" viewBox="0 0 120 120" role="img" aria-label="The word active reaches a fork leading to three tables, starts toward each, pulls back, and a question mark appears.">
+      <g class="a-all">
+        <path class="ln draw a-tr" pathLength="1" d="M10 60H42"/>
+        <path class="ln draw br a-h1" pathLength="1" d="M42 60L78 28"/><path class="ln draw br a-h2" pathLength="1" d="M42 60H78"/><path class="ln draw br a-h3" pathLength="1" d="M42 60L78 92"/>
+        <g style="transform:translate(82px,16px)"><g class="tbl a-x1"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g></g><g style="transform:translate(82px,50px)"><g class="tbl a-x2"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g></g><g style="transform:translate(82px,84px)"><g class="tbl a-x3"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g></g>
+        <g class="chip a-chip"><rect x="-20" y="-9" width="40" height="18" rx="9"/><text y="3.4">active</text></g>
+        <text class="glyph a-q" x="26" y="38" text-anchor="middle">?</text>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Failure mode 2</p><h2>The model moves on; the documentation stays behind</h2>
+    <p class="d">Data staleness: definitions and schemas drift away from what was written down.</p>
+    <div class="ic"><svg class="mo xicon stl" data-name="t2_staleness" viewBox="0 0 120 120" role="img" aria-label="A two-column table gains a third and fourth column. The documentation page below still shows two columns; it turns grey and is circled.">
+      <g class="a-all">
+        <g class="tbl" style="transform:translate(14px,14px)"><rect class="o" width="40" height="32" rx="2"/><rect class="h" width="40" height="9" rx="2"/><path d="M0 20.5H40M20 9V32"/></g>
+        <g style="transform:translate(54px,14px)"><g class="tbl newc a-c1"><rect class="o" width="20" height="32" rx="2"/><rect class="h" width="20" height="9" rx="2"/><path d="M0 20.5H20"/></g></g>
+        <g style="transform:translate(74px,14px)"><g class="tbl newc a-c2"><rect class="o" width="20" height="32" rx="2"/><rect class="h" width="20" height="9" rx="2"/><path d="M0 20.5H20"/></g></g>
+        <path class="ln lk a-lk" d="M34 50V62"/>
+        <g class="page tbl a-pg" style="transform:translate(14px,64px)">
+          <rect class="o" width="40" height="44" rx="3"/>
+          <rect class="o" x="6" y="7" width="28" height="14" rx="1.5" style="stroke-width:1.8"/><path d="M6 12H34M20 7V21"/>
+          <path d="M6 28H34M6 34H34M6 40H24" style="stroke-width:2"/>
+        </g>
+        <path class="pen draw a-ring" pathLength="1" d="M15 78c0-9 9-13 20-13s21 5 20 13-9 13-21 13-20-5-19-14"/>
+        <text class="glyph a-bang" x="76" y="96" text-anchor="middle">!</text>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Failure mode 3</p><h2>The right table exists. The agent walks past it.</h2>
+    <p class="d">Retrieval failure: the answer was present about 80% of the time, so access was not the bottleneck.</p>
+    <div class="ic"><svg class="mo xicon ret" data-name="t3_retrieval" viewBox="0 0 120 120" role="img" aria-label="A search lens moves across six tables, passes right beside the correct one, and stops on a wrong one, which is marked with a cross.">
+      <g class="a-all">
+        <g class="tbl " style="transform:translate(14px,26px)" ><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g><g class="tbl " style="transform:translate(48px,26px)" ><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g>
+        <g style="transform:translate(82px,26px)"><g class="tbl right c a-tg"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g></g>
+        <g class="tbl " style="transform:translate(14px,64px)" ><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g><g class="tbl " style="transform:translate(48px,64px)" ><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g><g class="tbl " style="transform:translate(82px,64px)" ><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g>
+        <g class="mag a-mg"><circle r="10"/><path d="M7.5 7.5L15 15"/></g>
+        <text class="glyph a-x" x="95" y="108" text-anchor="middle">&#215;</text>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">The stack</p><h2>Three layers, each built to stop a different failure</h2>
+    <p class="d">Data foundations catch ambiguity, maintenance and validation catch staleness, skills catch retrieval failure.</p>
+    <div class="ic"><svg class="mo xicon lay" data-name="t4_layers" viewBox="0 0 120 120" role="img" aria-label="Three warning signs travel in separate lanes. The first is stopped by a barrier labelled data, the second by checks, the third by skills.">
+      <g class="a-all">
+        <path class="ln bar a-b1" d="M40 19V41"/><path class="ln bar a-b2" d="M58 49V71"/><path class="ln bar a-b3" d="M76 79V101"/>
+        <text class="lbl" x="48" y="33" style="text-anchor:start">DATA</text><text class="lbl" x="66" y="63" style="text-anchor:start">CHECKS</text><text class="lbl" x="84" y="93" style="text-anchor:start">SKILLS</text>
+        <g class="warn w1 a-l1"><path class="t" d="M0 -9L9 7H-9Z"/><path class="i" d="M0 -3V1.5M0 4.4V4.6"/></g><g class="warn w2 a-l2"><path class="t" d="M0 -9L9 7H-9Z"/><path class="i" d="M0 -3V1.5M0 4.4V4.6"/></g><g class="warn w3 a-l3"><path class="t" d="M0 -9L9 7H-9Z"/><path class="i" d="M0 -3V1.5M0 4.4V4.6"/></g>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Sources of truth</p><h2>Check the semantic layer first</h2>
+    <p class="d">Sources are ordered by trust. Compiled, human-owned metric definitions come before lineage, past queries and business context.</p>
+    <div class="ic"><svg class="mo xicon sem" data-name="t5_semantic_first" viewBox="0 0 120 120" role="img" aria-label="Four sources stacked by trust: a metric definition, a lineage graph, past SQL and a document. The agent goes straight to the metric definition, which is highlighted and checked; the rest fade.">
+      <g class="a-all">
+        <g style="transform:translate(48px,13px)"><rect class="box" width="52" height="18" rx="3"/><rect class="hl a-hl" x="4" y="3.5" width="44" height="11"/><text class="lbl" x="26" y="12.2">METRIC</text></g>
+        <g style="transform:translate(48px,46px)"><g class="lo a-lo"><path d="M5 0H25L41 -6M25 0L41 6"/><circle cx="5" r="4.5"/><circle cx="25" r="4.5"/><circle cx="41" cy="-6" r="4"/><circle cx="41" cy="6" r="4"/></g></g>
+        <g style="transform:translate(48px,62px)"><g class="lo a-lo"><rect class="box" width="34" height="16" rx="8"/><text class="lbl" x="17" y="11.2">SQL</text></g></g>
+        <g style="transform:translate(48px,86px)"><g class="lo a-lo"><rect class="box" width="18" height="22" rx="2"/><path d="M4 7H14M4 12H14M4 17H10"/></g></g>
+        <path class="spark a-sp" d="M0 -10C1 -3 3 -1 10 0C3 1 1 3 0 10C-1 3 -3 1 -10 0C-3 -1 -1 -3 0 -10Z"/>
+        <path class="pen draw a-ck" pathLength="1" d="M104 14l4 4 8-10"/>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Skills</p><h2>A knowledge skill routes the question to the right reference</h2>
+    <p class="d">Without skills, accuracy stayed at or below 21%. With them it exceeds 95% in aggregate.</p>
+    <div class="ic"><svg class="mo xicon rtr" data-name="t6_skills_router" viewBox="0 0 120 120" role="img" aria-label="A question passes through a skill file and is sent directly to one of five reference documents, which is highlighted.">
+      <g class="a-all">
+        <path class="ln w " d="M66 60L88 16"/><path class="ln w a-w" d="M66 60L88 38"/><path class="ln w " d="M66 60L88 60"/><path class="ln w " d="M66 60L88 82"/><path class="ln w " d="M66 60L88 104"/><g style="transform:translate(90px,9px)"><g class="pg "><rect  width="18" height="14" rx="2"/><path d="M4 5H14M4 9H11"/></g></g><g style="transform:translate(90px,31px)"><g class="pg hit c a-hit"><rect class=a-hf width="18" height="14" rx="2"/><path d="M4 5H14M4 9H11"/></g></g><g style="transform:translate(90px,53px)"><g class="pg "><rect  width="18" height="14" rx="2"/><path d="M4 5H14M4 9H11"/></g></g><g style="transform:translate(90px,75px)"><g class="pg "><rect  width="18" height="14" rx="2"/><path d="M4 5H14M4 9H11"/></g></g><g style="transform:translate(90px,97px)"><g class="pg "><rect  width="18" height="14" rx="2"/><path d="M4 5H14M4 9H11"/></g></g>
+        <g style="transform:translate(34px,40px)"><g class="tbl c a-sk"><rect class="o" width="32" height="40" rx="3"/><rect class="h" width="32" height="10" rx="3"/><text class="lbl" x="16" y="24">SKILL</text><path d="M6 31H26"/></g></g>
+        <g class="qc a-rb"><circle r="8.5"/><text y="4.3">?</text></g>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Validation</p><h2>A second agent challenges the answer before it ships</h2>
+    <p class="d">Adversarial review added about 6% accuracy, at 32% more tokens and 72% higher latency.</p>
+    <div class="ic"><svg class="mo xicon adv" data-name="t7_adversarial_review" viewBox="0 0 120 120" role="img" aria-label="A SQL answer reaches a reviewer agent's gate and is bounced back grey. It is revised, tries again, the gate lifts, and it passes with a check.">
+      <g class="a-all">
+        <path class="ln" d="M8 84H112" opacity=".35"/>
+        <g class="a-g"><path class="ln gate" d="M70 54V84"/><g class="bot" style="transform:translate(70px,40px)"><rect x="-10" y="-9" width="20" height="18" rx="4"/><circle cx="-4" cy="-1" r="2.2"/><circle cx="4" cy="-1" r="2.2"/></g></g>
+        <g class="mv a-ab"><g class="chip c a-ap"><rect class="a-af" x="-16" y="-9" width="32" height="18" rx="9"/><text y="3.4">SQL</text></g></g>
+        <path class="pen draw a-ck" pathLength="1" d="M86 50l6 6 11-13"/>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Feedback loop</p><h2>Every correction becomes a fix in the docs</h2>
+    <p class="d">A scheduled agent scans channels for corrections and opens one-line documentation fixes for domain owners.</p>
+    <div class="ic"><svg class="mo xicon cor" data-name="t8_correction_loop" viewBox="0 0 120 120" role="img" aria-label="A line leaves a document and travels to a chat bubble, where it is marked wrong. A corrected red line travels back and is written into the document.">
+      <g class="a-all">
+        <path class="ln arc" d="M42 44C54 26 82 24 94 42"/><path class="ln arc" d="M92 76C82 96 54 96 42 76"/>
+        <g class="tbl" style="transform:translate(12px,38px)"><rect class="o" width="30" height="44" rx="3"/><path d="M8 12H22M8 20H22" style="stroke-width:3;stroke-linecap:round"/></g>
+        <path class="bub" d="M87 44H105a5 5 0 0 1 5 5V61a5 5 0 0 1-5 5H97l-7 7V66H87a5 5 0 0 1-5-5V49a5 5 0 0 1 5-5Z"/>
+        <text class="glyph no a-no" x="96" y="61" text-anchor="middle">&#215;</text>
+        <g class="ans a-ans"><path class="ln" d="M-7 0H7"/></g>
+        <g class="fix a-fix"><path class="pen" d="M-7 0H7"/></g>
+      </g></svg></div></div>
+</div></body></html>

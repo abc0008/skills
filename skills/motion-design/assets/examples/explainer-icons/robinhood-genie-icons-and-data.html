@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Practice set: Robinhood Hive Mind and Databricks Genie</title>
+<style>
+/* ===== motion-design base ===== */
+:root{--paper:#f4efe4;--ink:#191919;--mute:#c9c2b2;--mute-text:#8d8676;--hl:#ffd60a;--mark:#e5381c;
+  --io:cubic-bezier(.645,.045,.355,1);--out:cubic-bezier(.165,.84,.44,1);--snap:cubic-bezier(.19,1,.22,1);
+  --font:"Helvetica Neue",Helvetica,Arial,sans-serif}
+.mo{display:block;background:var(--paper);color:var(--ink);font-family:var(--font)}
+svg.mo{width:100%;height:auto;overflow:visible}
+.mo text{font-family:var(--font);fill:currentColor}
+.mo .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.mo .pen{fill:none;stroke:var(--mark);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.mo .hl{fill:var(--hl)} .mo .key{fill:var(--ink)} .mo .rest{fill:var(--mute)} .mo .rest-t{fill:var(--mute-text)}
+/* data */
+.mo [class*="d-"]{animation-duration:.5s;animation-delay:var(--at,0s);animation-fill-mode:both;animation-timing-function:var(--out)}
+.mo .d-draw{stroke-dasharray:1;stroke-dashoffset:0;animation-name:d-draw;animation-timing-function:var(--io)}
+.mo .d-grow{transform-box:fill-box;transform-origin:50% 100%;animation-name:d-grow;animation-duration:.7s;animation-timing-function:var(--snap)}
+.mo .d-fade{animation-name:d-fade}
+.mo .d-swipe{transform-box:fill-box;transform-origin:0 50%;animation-name:d-swipe;animation-duration:.35s;animation-timing-function:var(--io)}
+.mo .d-recede{animation-name:d-recede;animation-duration:.4s;animation-timing-function:ease;animation-delay:var(--focus,2s)}
+@keyframes d-draw{from{stroke-dashoffset:1;visibility:hidden}1%{visibility:visible}}
+@keyframes d-grow{from{transform:scaleY(0)}}
+@keyframes d-fade{from{opacity:0}}
+@keyframes d-swipe{from{transform:scaleX(0)}}
+@keyframes d-recede{from{fill:var(--ink);stroke:var(--ink);color:var(--ink);opacity:1}}
+.mo .val{font-size:20px;font-weight:800;text-anchor:middle}.mo .cat{font-size:14px;font-weight:700;text-anchor:middle}
+.mo .sub{font-size:12px;font-weight:600;text-anchor:middle;fill:var(--mute-text)}.mo .note{font-size:19px;font-weight:800}
+/* icons */
+.xicon{--loop:5s}
+.xicon *{transform-box:view-box;transform-origin:0 0}
+.xicon .draw{stroke-dasharray:1;stroke-dashoffset:0}
+.xicon .a-all{animation-name:x-all}
+@keyframes x-all{0%{opacity:0}4%,95%{opacity:1}100%{opacity:0}}
+.xicon .glyph{fill:var(--mark);font:800 30px/1 var(--font);transform-box:fill-box;transform-origin:50% 60%;text-anchor:middle}
+.xicon .c{transform-box:fill-box;transform-origin:50% 50%}
+.xicon [class*="a-"]{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:linear;animation-fill-mode:both}
+.mo.static [class*="d-"],.mo.static [class*="a-"]{animation:none!important}
+@media print,(prefers-reduced-motion:reduce){.mo [class*="d-"],.mo [class*="a-"]{animation:none!important}}
+/* object kit */
+.xicon .tbl rect.o{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .tbl .h{fill:currentColor}
+.xicon .tbl path{stroke:currentColor;stroke-width:1.5;fill:none}
+.xicon .chip rect{fill:var(--mark)}
+.xicon .chip text{fill:var(--paper);font:800 9.5px/1 var(--font);text-anchor:middle}
+.xicon .chipo rect{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .chipo text{fill:currentColor;font:800 9.5px/1 var(--font);text-anchor:middle}
+.xicon .lbl{font:800 8.5px/1 var(--font);letter-spacing:.05em;text-anchor:middle;fill:currentColor}
+.xicon .bot rect{fill:currentColor}.xicon .bot circle{fill:var(--paper)}
+.xicon .box{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .bub{fill:var(--paper);stroke:currentColor;stroke-width:2.5;stroke-linejoin:round}
+.xicon .lock rect{fill:currentColor}.xicon .lock path{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round}
+.xicon .clock circle{fill:var(--paper);stroke:currentColor;stroke-width:2.5}.xicon .clock path{stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
+
+/* ===== page ===== */
+*{box-sizing:border-box}
+body{margin:0;background:#ddd6c6;font-family:var(--font);color:var(--ink);padding:28px}
+h1.sec{max-width:1320px;margin:26px auto 4px;font-size:26px;font-weight:800;letter-spacing:-.02em}
+p.secd{max-width:1320px;margin:0 auto 14px;color:#5f594c;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1320px;margin:0 auto}
+.card{background:var(--paper);padding:22px 22px 18px;display:flex;flex-direction:column}
+.card .k{font-size:12px;color:var(--mute-text);margin:0 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.card h2{font-size:20px;line-height:1.15;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.card .d{font-size:13.5px;line-height:1.4;color:#5f594c;margin:0 0 10px}
+.card .ic{width:210px;margin:auto auto 0}
+.wide{max-width:1320px;margin:20px auto 0;background:var(--paper);padding:26px 30px 20px}
+.wide h2{font-size:28px;line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+.wide .d{font-size:13.5px;color:#5f594c;margin:0 0 8px}
+.wide .fig{max-width:760px}
+
+/* ===== R1 same question, different counts ===== */
+.r1 .tbl{opacity:.4}
+.r1 .tly{stroke-width:3.5}
+.r1 .a-l{animation-name:r1-l}.r1 .a-t{animation-name:r1-t}.r1 .a-ta{animation-name:r1-ta}.r1 .a-tb{animation-name:r1-tb}.r1 .a-ne{animation-name:r1-ne}
+@keyframes r1-l{0%,10%{stroke-dashoffset:1;visibility:hidden}11%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}22%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes r1-t{0%,20%{opacity:.4}26%,100%{opacity:1}}
+@keyframes r1-ta{0%,28%{opacity:0;transform:translateX(-8px);animation-timing-function:var(--out)}36%,100%{opacity:1;transform:translateX(0)}}
+@keyframes r1-tb{0%,38%{opacity:0;transform:translateX(-8px);animation-timing-function:var(--out)}46%,100%{opacity:1;transform:translateX(0)}}
+@keyframes r1-ne{0%,56%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}63%,100%{opacity:1;transform:scale(1)}}
+
+/* ===== R3 read-only ===== */
+.r3 .gate{stroke-width:5}
+.r3 .sel{transform:translate(90px,73px)}.r3 .drp{transform:translate(24px,73px)}.r3 .drp rect{fill:var(--mute-text)}
+.r3 .x{font-size:22px}
+.r3 .a-g{animation-name:r3-g}.r3 .a-s{animation-name:r3-s}.r3 .a-ck{animation-name:r3-ck}.r3 .a-d{animation-name:r3-d}.r3 .a-df{animation-name:r3-df}.r3 .a-x{animation-name:r3-x}
+@keyframes r3-s{0%,6%{transform:translate(-28px,73px);animation-timing-function:var(--io)}18%,22%{transform:translate(32px,73px);animation-timing-function:var(--io)}36%,100%{transform:translate(90px,73px)}}
+@keyframes r3-g{0%,15%{transform:translate(0,0);animation-timing-function:var(--io)}21%,35%{transform:translate(0,-30px);animation-timing-function:var(--io)}41%,61%{transform:translate(0,0)}63%{transform:translate(2.5px,0)}65%{transform:translate(-2.5px,0)}67%{transform:translate(2.5px,0)}69%,100%{transform:translate(0,0)}}
+@keyframes r3-ck{0%,40%{stroke-dashoffset:1;visibility:hidden}41%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}49%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes r3-d{0%,48%{transform:translate(-26px,73px);animation-timing-function:var(--io)}62%{transform:translate(38px,73px);animation-timing-function:var(--out)}70%,100%{transform:translate(24px,73px)}}
+@keyframes r3-df{0%,63%{fill:var(--mark)}70%,100%{fill:var(--mute-text)}}
+@keyframes r3-x{0%,72%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}78%,100%{opacity:1;transform:scale(1)}}
+
+/* ===== R4 mandatory critic: more time, same answer ===== */
+.r4 .loopp{opacity:.4;stroke-width:2;stroke-dasharray:.1 6}
+.r4 .mv{transform:translate(94px,73px)}
+.r4 .clock{color:var(--mark)}
+.r4 .hand{transform:rotate(330deg)}
+.r4 .a-m{animation-name:r4-m}.r4 .a-h{animation-name:r4-h}.r4 .a-c{animation-name:r4-c}.r4 .a-eq{animation-name:r4-eq}
+@keyframes r4-m{0%,6%{transform:translate(20px,73px);animation-timing-function:var(--io)}14%{transform:translate(34px,73px)}24%{transform:translate(28px,42px)}35%{transform:translate(60px,10px)}46%{transform:translate(92px,42px)}56%{transform:translate(86px,73px);animation-timing-function:var(--io)}66%,100%{transform:translate(94px,73px)}}
+@keyframes r4-h{0%,14%{transform:rotate(0deg)}56%,100%{transform:rotate(330deg)}}
+@keyframes r4-c{0%,50%{color:var(--ink)}60%,100%{color:var(--mark)}}
+@keyframes r4-eq{0%,68%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}75%,100%{opacity:1;transform:scale(1)}}
+
+/* ===== R5 answer ships with its SQL ===== */
+.r5 .bubw{transform-box:fill-box;transform-origin:30% 100%}
+.r5 .tx{stroke-width:3.5}
+.r5 .prov{transform:translate(78px,84px)}
+.r5 .a-b{animation-name:r5-b}.r5 .a-t1{animation-name:r5-t1}.r5 .a-t2{animation-name:r5-t2}.r5 .a-p{animation-name:r5-p}.r5 .a-pp{animation-name:r5-pp}.r5 .a-k{animation-name:r5-k}
+@keyframes r5-b{0%,5%{opacity:0;transform:scale(.6);animation-timing-function:var(--snap)}14%,100%{opacity:1;transform:scale(1)}}
+@keyframes r5-t1{0%,16%{stroke-dashoffset:1;visibility:hidden}17%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}26%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes r5-t2{0%,26%{stroke-dashoffset:1;visibility:hidden}27%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}34%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes r5-p{0%,40%{transform:translate(78px,56px);opacity:0}42%{transform:translate(78px,56px);opacity:1;animation-timing-function:var(--snap)}56%,100%{transform:translate(78px,84px);opacity:1}}
+@keyframes r5-pp{0%,62%{transform:scale(1)}67%{transform:scale(1.2)}72%,100%{transform:scale(1)}}
+@keyframes r5-k{0%,54%{stroke-dashoffset:1;visibility:hidden}55%{stroke-dashoffset:1;visibility:visible}60%,100%{stroke-dashoffset:0;visibility:visible}}
+
+/* ===== G1 one definition of revenue ===== */
+.g1 .tbl{color:var(--mute-text)}
+.g1 .v{opacity:0}.g1 .v rect{fill:var(--paper);stroke:var(--mark);stroke-width:2}.g1 .v text{fill:var(--mark);font:800 8.5px/1 var(--font);text-anchor:middle}
+.g1 .hl{transform-box:fill-box;transform-origin:0 50%}
+.g1 .a-v1{animation-name:g1-v1}.g1 .a-v2{animation-name:g1-v2}.g1 .a-v3{animation-name:g1-v3}.g1 .a-hl{animation-name:g1-hl}.g1 .a-ck{animation-name:g1-ck}.g1 .a-bx{animation-name:g1-bx}
+@keyframes g1-v1{0%,6%{transform:translate(50px,24px) rotate(-9deg);opacity:0}10%,16%{transform:translate(50px,24px) rotate(-9deg);opacity:1;animation-timing-function:var(--io)}30%{transform:translate(90px,60px) rotate(0deg);opacity:1}33%,100%{transform:translate(90px,60px);opacity:0}}
+@keyframes g1-v2{0%,6%{transform:translate(50px,60px) rotate(6deg);opacity:0}10%,26%{transform:translate(50px,60px) rotate(6deg);opacity:1;animation-timing-function:var(--io)}40%{transform:translate(90px,60px) rotate(0deg);opacity:1}43%,100%{transform:translate(90px,60px);opacity:0}}
+@keyframes g1-v3{0%,6%{transform:translate(50px,96px) rotate(-5deg);opacity:0}10%,36%{transform:translate(50px,96px) rotate(-5deg);opacity:1;animation-timing-function:var(--io)}50%{transform:translate(90px,60px) rotate(0deg);opacity:1}53%,100%{transform:translate(90px,60px);opacity:0}}
+@keyframes g1-bx{0%,26%{opacity:0;transform:scale(.7);animation-timing-function:var(--snap)}33%,100%{opacity:1;transform:scale(1)}}
+@keyframes g1-hl{0%,54%{transform:scaleX(0);animation-timing-function:var(--io)}64%,100%{transform:scaleX(1)}}
+@keyframes g1-ck{0%,66%{stroke-dashoffset:1;visibility:hidden}67%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}75%,100%{stroke-dashoffset:0;visibility:visible}}
+
+/* ===== G2 benchmarks: run, fix, rerun ===== */
+.g2 .q{stroke-width:3;opacity:.45}
+.g2 .hd text{fill:var(--paper)}
+.g2 .xm{stroke:var(--mark);stroke-width:3.5;stroke-linecap:round;fill:none;opacity:0}
+.g2 .ck{stroke:var(--ink);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+.g2 .xm.stay{opacity:1}
+.g2 .run1{opacity:0}
+.g2 .a-r1{animation-name:g2-r1}.g2 .a-r2{animation-name:g2-r2}
+.g2 .a-x1{animation-name:g2-x1}.g2 .a-x3{animation-name:g2-x3}.g2 .a-x4{animation-name:g2-x4}
+.g2 .a-k2{animation-name:g2-k2}.g2 .a-k1{animation-name:g2-k1}.g2 .a-k3{animation-name:g2-k3}
+@keyframes g2-r1{0%,44%{opacity:1}50%,100%{opacity:0}}
+@keyframes g2-r2{0%,44%{opacity:0}50%,100%{opacity:1}}
+@keyframes g2-x1{0%,10%{opacity:0}14%,54%{opacity:1}58%,100%{opacity:0}}
+@keyframes g2-k2{0%,17%{stroke-dashoffset:1;visibility:hidden}18%{stroke-dashoffset:1;visibility:visible}23%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes g2-x3{0%,24%{opacity:0}28%,64%{opacity:1}68%,100%{opacity:0}}
+@keyframes g2-x4{0%,31%{opacity:0}35%,100%{opacity:1}}
+@keyframes g2-k1{0%,57%{stroke-dashoffset:1;visibility:hidden}58%{stroke-dashoffset:1;visibility:visible}64%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes g2-k3{0%,67%{stroke-dashoffset:1;visibility:hidden}68%{stroke-dashoffset:1;visibility:visible}74%,100%{stroke-dashoffset:0;visibility:visible}}
+
+/* ===== G3 synonyms: Australia -> AUS ===== */
+.g3 .ca{opacity:0}.g3 .cb{transform:translate(84px,68px)}
+.g3 .hl{transform-box:fill-box;transform-origin:0 50%}
+.g3 .cell{font-size:7.5px}
+.g3 .a-ca{animation-name:g3-ca}.g3 .a-cb{animation-name:g3-cb}.g3 .a-bx{animation-name:g3-bx}.g3 .a-hl{animation-name:g3-hl}
+@keyframes g3-ca{0%,5%{transform:translate(60px,12px);opacity:0}8%,12%{transform:translate(60px,12px);opacity:1;animation-timing-function:var(--io)}24%{transform:translate(60px,39px);opacity:1}28%,100%{transform:translate(60px,39px);opacity:0}}
+@keyframes g3-bx{0%,22%{transform:scale(1)}27%{transform:scale(1.1)}32%,100%{transform:scale(1)}}
+@keyframes g3-cb{0%,25%{transform:translate(60px,39px);opacity:0}29%,32%{transform:translate(60px,39px);opacity:1;animation-timing-function:var(--io)}48%,100%{transform:translate(84px,68px);opacity:1}}
+@keyframes g3-hl{0%,50%{transform:scaleX(0);animation-timing-function:var(--io)}60%,100%{transform:scaleX(1)}}
+
+/* ===== G4 joins: state the cardinality ===== */
+.g4 .row{stroke-width:3.5}
+.g4 .ex{stroke:var(--mark);opacity:0}
+.g4 .card{transform-box:fill-box;transform-origin:50% 50%}
+.g4 .a-lk{animation-name:g4-lk}.g4 .a-b{animation-name:g4-b}.g4 .a-e1{animation-name:g4-e1}.g4 .a-e2{animation-name:g4-e2}.g4 .a-e3{animation-name:g4-e3}.g4 .a-e4{animation-name:g4-e4}.g4 .a-cd{animation-name:g4-cd}
+@keyframes g4-lk{0%,5%{stroke-dashoffset:1;visibility:hidden}6%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}14%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes g4-b{0%,15%{opacity:0;stroke:var(--ink)}22%,28%{opacity:1;stroke:var(--ink)}34%,62%{opacity:1;stroke:var(--mark)}70%,100%{opacity:1;stroke:var(--ink)}}
+@keyframes g4-e1{0%,28%{opacity:0;transform:translateY(-6px)}33%,62%{opacity:1;transform:translateY(0)}70%,100%{opacity:0;transform:translateY(-6px)}}
+@keyframes g4-e2{0%,32%{opacity:0;transform:translateY(-6px)}37%,62%{opacity:1;transform:translateY(0)}70%,100%{opacity:0;transform:translateY(-12px)}}
+@keyframes g4-e3{0%,36%{opacity:0;transform:translateY(-6px)}41%,62%{opacity:1;transform:translateY(0)}70%,100%{opacity:0;transform:translateY(-18px)}}
+@keyframes g4-e4{0%,40%{opacity:0;transform:translateY(-6px)}45%,62%{opacity:1;transform:translateY(0)}70%,100%{opacity:0;transform:translateY(-24px)}}
+@keyframes g4-cd{0%,52%{opacity:0;transform:scale(.5);animation-timing-function:var(--snap)}60%,100%{opacity:1;transform:scale(1)}}
+</style>
+</head>
+<body>
+
+<h1 class="sec">Robinhood: Hive Mind, self-service analytics</h1>
+<p class="secd">Four explainer icons and one data animation. Headlines and figures are taken from the article.</p>
+<div class="grid">
+
+  <div class="card"><p class="k">The problem</p><h2>Same question, different tables, different counts</h2>
+    <p class="d">Asked "How many Gold subscribers," different tables gave different answers.</p>
+    <div class="ic"><svg class="mo xicon r1" data-name="r1_different_counts" viewBox="0 0 120 120" role="img" aria-label="The question Gold goes to two tables. Each returns a different-sized count, and a not-equal sign appears between them.">
+      <g class="a-all">
+        <path class="ln draw a-l" pathLength="1" d="M40 54L60 36"/><path class="ln draw a-l" pathLength="1" d="M40 66L60 84"/>
+        <g style="transform:translate(62px,24px)"><g class="tbl a-t"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g></g>
+        <g style="transform:translate(62px,76px)"><g class="tbl a-t"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g></g>
+        <g class="a-ta"><path class="ln tly" d="M96 31H112M96 38H112"/></g>
+        <g class="a-tb"><path class="ln tly" d="M96 76H112M96 83H112M96 90H112M96 97H112"/></g>
+        <g class="chip" style="transform:translate(24px,60px)"><rect x="-18" y="-9" width="36" height="18" rx="9"/><text y="3.4">GOLD</text></g>
+        <text class="glyph a-ne" x="104" y="67" style="font-size:24px">&#8800;</text>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Safety</p><h2>The agent can read. It cannot write.</h2>
+    <p class="d">It runs as the actual user, limited to read-only statements, on its own query cluster.</p>
+    <div class="ic"><svg class="mo xicon r3" data-name="r3_read_only" viewBox="0 0 120 120" role="img" aria-label="A SELECT statement reaches a locked gate, the gate lifts and it passes with a check. A DROP statement is bounced back, turns grey and is marked with a cross.">
+      <g class="a-all">
+        <path class="ln" d="M6 84H114" opacity=".35"/>
+        <g class="a-g"><path class="ln gate" d="M62 54V84"/><g class="lock" style="transform:translate(62px,40px)"><path d="M-5 -3V-9a5 5 0 0 1 10 0V-3"/><rect x="-9" y="-4" width="18" height="14" rx="3"/></g></g>
+        <g class="chip sel a-s"><rect x="-22" y="-9" width="44" height="18" rx="9"/><text y="3.4">SELECT</text></g>
+        <path class="pen draw a-ck" pathLength="1" d="M82 50l6 6 11-13"/>
+        <g class="chip drp a-d"><rect class="a-df" x="-17" y="-9" width="34" height="18" rx="9"/><text y="3.4">DROP</text></g>
+        <text class="glyph x a-x" x="24" y="56">&#215;</text>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Verification</p><h2>A mandatory critic loop cost time and changed nothing</h2>
+    <p class="d">1.5x slower and about 34% more tokens, with no statistically significant accuracy gain.</p>
+    <div class="ic"><svg class="mo xicon r4" data-name="r4_critic_loop" viewBox="0 0 120 120" role="img" aria-label="A SQL answer detours up and around a reviewer agent while a clock runs, then comes back down unchanged. An equals sign appears.">
+      <g class="a-all">
+        <path class="ln" d="M6 84H114" opacity=".35"/>
+        <path class="ln loopp" d="M36 62C20 30 40 8 60 8C80 8 100 30 84 62"/>
+        <g class="bot" style="transform:translate(60px,42px)"><rect x="-10" y="-9" width="20" height="18" rx="4"/><circle cx="-4" cy="-1" r="2.2"/><circle cx="4" cy="-1" r="2.2"/></g>
+        <g class="clock a-c" style="transform:translate(22px,22px)"><circle r="10"/><g class="hand a-h"><path d="M0 0V-6.5"/></g></g>
+        <g class="mv a-m"><g class="chip"><rect x="-16" y="-9" width="32" height="18" rx="9"/><text y="3.4">SQL</text></g></g>
+        <text class="glyph a-eq" x="94" y="58" style="font-size:24px">=</text>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Provenance</p><h2>Every answer ships with the SQL behind it</h2>
+    <p class="d">The agent plans, gathers context, writes and verifies SQL, then responds with the query shown.</p>
+    <div class="ic"><svg class="mo xicon r5" data-name="r5_sql_provenance" viewBox="0 0 120 120" role="img" aria-label="An answer bubble appears and fills with text. A SQL chip slides out from beneath it and stays attached.">
+      <g class="a-all">
+        <g class="prov a-p"><g class="chip c a-pp"><rect x="-16" y="-9" width="32" height="18" rx="9"/><text y="3.4">SQL</text></g></g>
+        <path class="pen draw a-k" pathLength="1" d="M78 66V74"/>
+        <g class="bubw a-b"><path class="bub" d="M30 20H90a8 8 0 0 1 8 8V58a8 8 0 0 1-8 8H50l-12 12V66H30a8 8 0 0 1-8-8V28a8 8 0 0 1 8-8Z"/></g>
+        <path class="ln tx draw a-t1" pathLength="1" d="M34 36H86"/><path class="ln tx draw a-t2" pathLength="1" d="M34 49H68"/>
+      </g></svg></div></div>
+</div>
+
+<div class="wide">
+  <h2>Take the docs away and the agent picks the right table half the time</h2>
+  <p class="d">Robinhood's paired experiment: the same agent with and without table documentation.</p>
+  <div class="fig"><svg class="mo" data-name="r_data_docs_experiment" style="--focus:2.1s" viewBox="0 0 640 340" role="img" aria-label="With docs the agent chose the right table 100% of the time and completed cleanly 96% of the time. Without docs: 51% and 42%.">
+    <path class="ln d-draw" pathLength="1" d="M52 290H612"/>
+    <g class="d-grow" style="--at:.25s"><rect class="key" x="110" y="90" width="70" height="200"/></g>
+    <g class="d-grow" style="--at:.35s"><rect x="190" y="188" width="70" height="102" style="fill:var(--mark)"/></g>
+    <g class="d-grow" style="--at:.5s"><rect class="rest d-recede" x="380" y="98" width="70" height="192"/></g>
+    <g class="d-grow" style="--at:.6s"><rect class="rest d-recede" x="460" y="206" width="70" height="84"/></g>
+    <text class="val d-fade" style="--at:.95s" x="145" y="78">100%</text>
+    <text class="val d-fade" style="--at:1.05s" x="225" y="176">51%</text>
+    <g class="d-fade" style="--at:1.2s"><text class="val rest-t d-recede" x="415" y="86">96%</text></g>
+    <g class="d-fade" style="--at:1.3s"><text class="val rest-t d-recede" x="495" y="194">42%</text></g>
+    <g class="d-fade" style="--at:.1s">
+      <text class="sub" x="145" y="306">with docs</text><text class="sub" x="225" y="306">no docs</text><text class="sub" x="415" y="306">with docs</text><text class="sub" x="495" y="306">no docs</text>
+      <text class="cat" x="185" y="328">Right table chosen</text><text class="cat" x="455" y="328">Clean completions</text>
+    </g>
+    <path class="pen d-draw" pathLength="1" style="--at:2.5s" d="M199 174c1-15 12-23 26-22 14 1 26 9 25 24-1 14-12 22-28 21-14-1-26-8-23-25"/>
+    <path class="pen d-draw" pathLength="1" style="--at:2.95s;animation-duration:.4s" d="M290 42C272 70 260 108 252 146"/>
+    <path class="pen d-fade" style="--at:3.3s" d="M252 146l-2-15M252 146l12-9"/>
+    <rect class="hl d-swipe" style="--at:3.35s" x="262" y="4" width="250" height="34"/>
+    <text class="note d-fade" style="--at:3.45s" x="270" y="28">No docs: right table 51%</text>
+  </svg></div>
+</div>
+
+<h1 class="sec">Databricks: building high-performing Genie spaces</h1>
+<p class="secd">Four explainer icons. Headlines are taken from the article's best practices.</p>
+<div class="grid">
+
+  <div class="card"><p class="k">Step 1: data foundation</p><h2>Define revenue once, in a metric view</h2>
+    <p class="d">Shared metrics are defined in one place so Genie inherits a single approved definition.</p>
+    <div class="ic"><svg class="mo xicon g1" data-name="g1_metric_view" viewBox="0 0 120 120" role="img" aria-label="Three tables each carry their own slightly different version of revenue. The three versions fly into one box labelled revenue, which is highlighted and checked.">
+      <g class="a-all">
+        <g class="tbl" style="transform:translate(6px,14px)"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g>
+        <g class="tbl" style="transform:translate(6px,50px)"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g>
+        <g class="tbl" style="transform:translate(6px,86px)"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g>
+        <g style="transform:translate(64px,51px)"><g class="c a-bx"><rect class="box" width="52" height="18" rx="3"/><rect class="hl a-hl" x="3.5" y="3.5" width="45" height="11"/><text class="lbl" x="26" y="12.2">REVENUE</text></g></g>
+        <g class="v a-v1"><rect x="-13" y="-7.5" width="26" height="15" rx="7.5"/><text y="3">REV</text></g>
+        <g class="v a-v2"><rect x="-13" y="-7.5" width="26" height="15" rx="7.5"/><text y="3">REV</text></g>
+        <g class="v a-v3"><rect x="-13" y="-7.5" width="26" height="15" rx="7.5"/><text y="3">REV</text></g>
+        <path class="pen draw a-ck" pathLength="1" d="M98 36l5 5 9-11"/>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Step 2: benchmarks</p><h2>Write the test questions first, then rerun them after every change</h2>
+    <p class="d">Expect early failures that reveal missing context; rerun to track progress and catch regressions.</p>
+    <div class="ic"><svg class="mo xicon g2" data-name="g2_benchmarks" viewBox="0 0 120 120" role="img" aria-label="A list of four test questions. On run one, three fail. On run two, two of the failures turn into passes and one remains.">
+      <g class="a-all">
+        <g class="tbl hd" style="transform:translate(20px,10px)"><rect class="o" width="80" height="100" rx="4"/><rect class="h" width="80" height="18" rx="4"/>
+          <text class="lbl run1 a-r1" x="40" y="12.5">RUN 1</text><text class="lbl a-r2" x="40" y="12.5">RUN 2</text></g>
+        <path class="ln q" d="M30 42H68M30 60H62M30 78H68M30 96H58"/>
+        <path class="xm a-x1" d="M80 37l10 10M90 37l-10 10"/><path class="ck draw a-k1" pathLength="1" d="M79 42l4.5 4.5 8-10"/>
+        <path class="ck draw a-k2" pathLength="1" d="M79 60l4.5 4.5 8-10"/>
+        <path class="xm a-x3" d="M80 73l10 10M90 73l-10 10"/><path class="ck draw a-k3" pathLength="1" d="M79 78l4.5 4.5 8-10"/>
+        <path class="xm stay a-x4" d="M80 91l10 10M90 91l-10 10"/>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Step 3: vocabulary</p><h2>Teach it that "Australia" means AUS</h2>
+    <p class="d">Synonyms and value dictionaries let Genie match the words people use to the values in the data.</p>
+    <div class="ic"><svg class="mo xicon g3" data-name="g3_synonyms" viewBox="0 0 120 120" role="img" aria-label="The word Australia passes through a synonyms box and comes out as AUS, then lands beside the matching cell in a table, which is highlighted.">
+      <g class="a-all">
+        <g class="tbl" style="transform:translate(24px,80px)"><rect class="o" width="72" height="30" rx="2"/><rect class="hl a-hl" x="49" y="9" width="22" height="9.5"/><rect class="h" width="72" height="8" rx="2"/><path d="M0 19H72M24 8V30M48 8V30"/><text class="lbl cell" x="60" y="16.6">AUS</text></g>
+        <g style="transform:translate(29px,30px)"><g class="c a-bx"><rect class="box" width="62" height="18" rx="3"/><text class="lbl" x="31" y="12.2">SYNONYMS</text></g></g>
+        <g class="chip ca a-ca"><rect x="-27" y="-9" width="54" height="18" rx="9"/><text y="3.4">Australia</text></g>
+        <g class="chip cb a-cb"><rect x="-15" y="-9" width="30" height="18" rx="9"/><text y="3.4">AUS</text></g>
+      </g></svg></div></div>
+
+  <div class="card"><p class="k">Step 3: joins</p><h2>State the join's cardinality, or the rows multiply</h2>
+    <p class="d">Declaring one-to-one, one-to-many or many-to-many prevents row explosion and double-counting.</p>
+    <div class="ic"><svg class="mo xicon g4" data-name="g4_join_cardinality" viewBox="0 0 120 120" role="img" aria-label="Two tables are joined and return three rows. The rows multiply into seven and turn red. A one-to-many label is set on the join and the result collapses back to three rows.">
+      <g class="a-all">
+        <path class="ln draw a-lk" pathLength="1" d="M38 28H82"/>
+        <g class="tbl" style="transform:translate(10px,18px)"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g>
+        <g class="tbl" style="transform:translate(84px,18px)"><rect class="o" width="26" height="20" rx="2"/><rect class="h" width="26" height="6.5" rx="2"/><path d="M0 13.5H26M13 6.5V20"/></g>
+        <path class="ln row a-b" d="M36 58H84M36 66H84M36 74H84"/>
+        <path class="ln row ex a-e1" d="M36 82H84"/><path class="ln row ex a-e2" d="M36 90H84"/><path class="ln row ex a-e3" d="M36 98H84"/><path class="ln row ex a-e4" d="M36 106H84"/>
+        <g style="transform:translate(60px,28px)"><g class="chipo card a-cd"><rect x="-15" y="-9" width="30" height="18" rx="9"/><text y="3.4">1 : N</text></g></g>
+      </g></svg></div></div>
+</div>
+</body>
+</html>
