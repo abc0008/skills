@@ -12,6 +12,7 @@ This repository contains Codex skill packages.
 - `deck-ia-storytelling`: Score and improve slide decks with an IA + Storytelling with Data rubric (assertion titles, clutter, color, narrative flow).
 - `cfin-nextjs-fdas-app-routes`: Next.js App Router shells for ACEAnalytics marketing pages, product routes, and the CFIN workspace in `cfin_new/nextjs-fdas`.
 - `databricks-genie-space-ci-cd`: Genie metric-drift defense — L1 PR colocation gates, L2 structural drift audits, L2b behavioral benchmarks, and repo-driven deploy for Databricks Genie spaces on Azure DevOps.
+- `motion-design`: Editorial (Vox-style) motion graphics in HTML — animated explainer icons built from Lucide icons and data animations that pull the eye to the key number; pairs with `doc-to-infographic` and exports GIFs for PowerPoint.
 
 - `reactflow-app-builder`: React Flow editors with custom nodes/edges, persistence, undo/redo, reference docs, helper scripts, and a starter app.
 

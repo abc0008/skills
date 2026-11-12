@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Practice set 3: Lucide objects</title>
+<style>
+/* ===== motion-design base ===== */
+:root{--paper:#f4efe4;--ink:#191919;--mute:#c9c2b2;--mute-text:#8d8676;--hl:#ffd60a;--mark:#e5381c;
+  --io:cubic-bezier(.645,.045,.355,1);--out:cubic-bezier(.165,.84,.44,1);--snap:cubic-bezier(.19,1,.22,1);
+  --font:"Helvetica Neue",Helvetica,Arial,sans-serif}
+.mo{display:block;background:var(--paper);color:var(--ink);font-family:var(--font)}
+svg.mo{width:100%;height:auto;overflow:visible}
+.mo text{font-family:var(--font);fill:currentColor}
+.mo .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+.mo .pen{fill:none;stroke:var(--mark);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.mo .hl{fill:var(--hl)} .mo .key{fill:var(--ink)} .mo .rest{fill:var(--mute)} .mo .rest-t{fill:var(--mute-text)}
+/* data */
+.mo [class*="d-"]{animation-duration:.5s;animation-delay:var(--at,0s);animation-fill-mode:both;animation-timing-function:var(--out)}
+.mo .d-draw{stroke-dasharray:1;stroke-dashoffset:0;animation-name:d-draw;animation-timing-function:var(--io)}
+.mo .d-grow{transform-box:fill-box;transform-origin:50% 100%;animation-name:d-grow;animation-duration:.7s;animation-timing-function:var(--snap)}
+.mo .d-fade{animation-name:d-fade}
+.mo .d-swipe{transform-box:fill-box;transform-origin:0 50%;animation-name:d-swipe;animation-duration:.35s;animation-timing-function:var(--io)}
+.mo .d-recede{animation-name:d-recede;animation-duration:.4s;animation-timing-function:ease;animation-delay:var(--focus,2s)}
+@keyframes d-draw{from{stroke-dashoffset:1;visibility:hidden}1%{visibility:visible}}
+@keyframes d-grow{from{transform:scaleY(0)}}
+@keyframes d-fade{from{opacity:0}}
+@keyframes d-swipe{from{transform:scaleX(0)}}
+@keyframes d-recede{from{fill:var(--ink);stroke:var(--ink);color:var(--ink);opacity:1}}
+.mo .val{font-size:20px;font-weight:800;text-anchor:middle}.mo .cat{font-size:14px;font-weight:700;text-anchor:middle}
+.mo .sub{font-size:12px;font-weight:600;text-anchor:middle;fill:var(--mute-text)}.mo .note{font-size:19px;font-weight:800}
+/* icons */
+.xicon{--loop:5s}
+.xicon *{transform-box:view-box;transform-origin:0 0}
+.xicon .draw{stroke-dasharray:1;stroke-dashoffset:0}
+.xicon .a-all{animation-name:x-all}
+@keyframes x-all{0%{opacity:0}4%,95%{opacity:1}100%{opacity:0}}
+.xicon .glyph{fill:var(--mark);font:800 30px/1 var(--font);transform-box:fill-box;transform-origin:50% 60%;text-anchor:middle}
+.xicon .c{transform-box:fill-box;transform-origin:50% 50%}
+.xicon [class*="a-"]{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:linear;animation-fill-mode:both}
+.mo.static [class*="d-"],.mo.static [class*="a-"]{animation:none!important}
+@media print,(prefers-reduced-motion:reduce){.mo [class*="d-"],.mo [class*="a-"]{animation:none!important}}
+/* object kit */
+.xicon .tbl rect.o{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .tbl .h{fill:currentColor}
+.xicon .tbl path{stroke:currentColor;stroke-width:1.5;fill:none}
+.xicon .chip rect{fill:var(--mark)}
+.xicon .chip text{fill:var(--paper);font:800 9.5px/1 var(--font);text-anchor:middle}
+.xicon .chipo rect{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .chipo text{fill:currentColor;font:800 9.5px/1 var(--font);text-anchor:middle}
+.xicon .lbl{font:800 8.5px/1 var(--font);letter-spacing:.05em;text-anchor:middle;fill:currentColor}
+.xicon .bot rect{fill:currentColor}.xicon .bot circle{fill:var(--paper)}
+.xicon .box{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+.xicon .bub{fill:var(--paper);stroke:currentColor;stroke-width:2.5;stroke-linejoin:round}
+.xicon .lock rect{fill:currentColor}.xicon .lock path{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round}
+.xicon .clock circle{fill:var(--paper);stroke:currentColor;stroke-width:2.5}.xicon .clock path{stroke:currentColor;stroke-width:2.5;stroke-linecap:round;fill:none}
+
+/* ===== page ===== */
+*{box-sizing:border-box}
+body{margin:0;background:#ddd6c6;font-family:var(--font);color:var(--ink);padding:28px}
+h1.sec{max-width:1320px;margin:26px auto 4px;font-size:26px;font-weight:800;letter-spacing:-.02em}
+p.secd{max-width:1320px;margin:0 auto 14px;color:#5f594c;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1320px;margin:0 auto}
+.card{background:var(--paper);padding:22px 22px 18px;display:flex;flex-direction:column}
+.card .k{font-size:12px;color:var(--mute-text);margin:0 0 6px;text-transform:uppercase;letter-spacing:.06em}
+.card h2{font-size:20px;line-height:1.15;font-weight:800;letter-spacing:-.02em;margin:0 0 8px}
+.card .d{font-size:13.5px;line-height:1.4;color:#5f594c;margin:0 0 10px}
+.card .ic{width:210px;margin:auto auto 0}
+.wide{max-width:1320px;margin:20px auto 0;background:var(--paper);padding:26px 30px 20px}
+.wide h2{font-size:28px;line-height:1.1;font-weight:800;letter-spacing:-.02em;margin:0 0 4px}
+.wide .d{font-size:13.5px;color:#5f594c;margin:0 0 8px}
+.wide .fig{max-width:760px}
+
+
+/* ---- Lucide objects ---- */
+.xicon .lu{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.xicon .plate{fill:var(--hl)}
+.xicon .off{color:var(--mute-text)}
+
+/* ===== 1. agent loop: gather context, write SQL, verify ===== */
+.agl .a-bot{animation-name:agl-bot}.agl .a-d{animation-name:agl-d}.agl .a-b{animation-name:agl-b}.agl .a-ln{animation-name:agl-ln}.agl .a-f{animation-name:agl-f}.agl .a-s{animation-name:agl-s}
+.agl .botp{transform:translate(40px,92px)}
+@keyframes agl-bot{0%,6%{transform:translate(14px,92px);animation-timing-function:var(--io)}18%,26%{transform:translate(32px,62px);animation-timing-function:var(--io)}38%,46%{transform:translate(74px,62px);animation-timing-function:var(--io)}58%,100%{transform:translate(40px,92px)}}
+@keyframes agl-d{0%,16%{color:var(--mute-text)}22%,100%{color:var(--ink)}}
+@keyframes agl-b{0%,36%{color:var(--mute-text)}42%,100%{color:var(--ink)}}
+@keyframes agl-ln{0%,58%{stroke-dashoffset:1;visibility:hidden}59%{stroke-dashoffset:1;visibility:visible}65%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes agl-f{0%,63%{opacity:0;transform:scale(.5);animation-timing-function:var(--snap)}70%,100%{opacity:1;transform:scale(1)}}
+@keyframes agl-s{0%,73%{opacity:0;transform:scale(.5);animation-timing-function:var(--snap)}80%,100%{opacity:1;transform:scale(1)}}
+
+/* ===== 2. read-only: the eye passes, the pencil does not ===== */
+.ro .gate{stroke-width:5}
+.ro .eyep{transform:translate(92px,78px)}.ro .penp{transform:translate(24px,78px)}
+.ro .x{font-size:22px}
+.ro .a-g{animation-name:ro-g}.ro .a-e{animation-name:ro-e}.ro .a-ck{animation-name:ro-ck}.ro .a-p{animation-name:ro-p}.ro .a-pc{animation-name:ro-pc}.ro .a-x{animation-name:ro-x}
+@keyframes ro-e{0%,6%{transform:translate(-18px,78px);animation-timing-function:var(--io)}18%,22%{transform:translate(34px,78px);animation-timing-function:var(--io)}36%,100%{transform:translate(92px,78px)}}
+@keyframes ro-g{0%,15%{transform:translate(0,0);animation-timing-function:var(--io)}21%,35%{transform:translate(0,-34px);animation-timing-function:var(--io)}41%,61%{transform:translate(0,0)}63%{transform:translate(2.5px,0)}65%{transform:translate(-2.5px,0)}67%{transform:translate(2.5px,0)}69%,100%{transform:translate(0,0)}}
+@keyframes ro-ck{0%,40%{stroke-dashoffset:1;visibility:hidden}41%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}49%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes ro-p{0%,48%{transform:translate(-18px,78px);animation-timing-function:var(--io)}62%{transform:translate(38px,78px);animation-timing-function:var(--out)}70%,100%{transform:translate(24px,78px)}}
+@keyframes ro-pc{0%,63%{color:var(--mark)}70%,100%{color:var(--mute-text)}}
+@keyframes ro-x{0%,72%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}78%,100%{opacity:1;transform:scale(1)}}
+
+/* ===== 3. start small: one use case, not the whole estate ===== */
+.ss .tgp{transform:translate(78px,60px)}
+.ss .plate{transform-box:fill-box;transform-origin:50% 50%}
+.ss .a-t{animation-name:ss-t}.ss .a-pl{animation-name:ss-pl}.ss .a-db{animation-name:ss-db}
+@keyframes ss-t{0%,6%{transform:translate(8px,8px);animation-timing-function:var(--io)}18%,22%{transform:translate(26px,34px);animation-timing-function:var(--io)}32%,36%{transform:translate(60px,34px);animation-timing-function:var(--io)}46%,50%{transform:translate(94px,34px);animation-timing-function:var(--io)}64%,100%{transform:translate(78px,60px)}}
+@keyframes ss-pl{0%,64%{opacity:0;transform:scale(.6);animation-timing-function:var(--snap)}72%,100%{opacity:1;transform:scale(1)}}
+@keyframes ss-db{0%,64%{color:var(--mute-text)}70%,100%{color:var(--ink)}}
+
+/* ===== 4. trusted function: the answer carries a badge ===== */
+.tr .hl{transform-box:fill-box;transform-origin:0 50%}
+.tr .qp{opacity:0}
+.tr .a-q{animation-name:tr-q}.tr .a-fn{animation-name:tr-fn}.tr .a-l1{animation-name:tr-l1}.tr .a-l2{animation-name:tr-l2}.tr .a-tb{animation-name:tr-tb}.tr .a-bd{animation-name:tr-bd}.tr .a-hl{animation-name:tr-hl}.tr .a-lb{animation-name:tr-lb}
+@keyframes tr-q{0%,5%{transform:translate(8px,52px);opacity:0}9%,12%{transform:translate(8px,52px);opacity:1;animation-timing-function:var(--io)}26%{transform:translate(46px,52px);opacity:1}30%,100%{transform:translate(46px,52px);opacity:0}}
+@keyframes tr-fn{0%,26%{transform:scale(1)}32%{transform:scale(1.15)}38%,100%{transform:scale(1)}}
+@keyframes tr-l2{0%,38%{stroke-dashoffset:1;visibility:hidden}39%{stroke-dashoffset:1;visibility:visible}46%,100%{stroke-dashoffset:0;visibility:visible}}
+@keyframes tr-tb{0%,44%{opacity:0;transform:scale(.5);animation-timing-function:var(--snap)}52%,100%{opacity:1;transform:scale(1)}}
+@keyframes tr-bd{0%,56%{opacity:0;transform:scale(2.2);animation-timing-function:var(--snap)}64%,100%{opacity:1;transform:scale(1)}}
+@keyframes tr-hl{0%,66%{transform:scaleX(0);animation-timing-function:var(--io)}74%,100%{transform:scaleX(1)}}
+@keyframes tr-lb{0%,64%{opacity:0}70%,100%{opacity:1}}
+
+/* ===== 5. corrections become evals ===== */
+.ev .arc{opacity:.35;stroke-width:2;stroke-dasharray:.1 6}
+.ev .fix{transform:translate(88px,81px)}.ev .fix path{stroke-width:3.5}
+.ev .a-m{animation-name:ev-m}.ev .a-fx{animation-name:ev-fx}.ev .a-cb{animation-name:ev-cb}
+@keyframes ev-m{0%,10%{color:var(--ink);transform:scale(1)}16%{color:var(--mark);transform:scale(1.12)}22%,100%{color:var(--mark);transform:scale(1)}}
+@keyframes ev-fx{0%,26%{transform:translate(30px,54px);opacity:0}28%{transform:translate(30px,54px);opacity:1}36%{transform:translate(34px,74px)}46%{transform:translate(48px,90px)}56%{transform:translate(66px,92px);animation-timing-function:var(--out)}68%,100%{transform:translate(88px,81px);opacity:1}}
+@keyframes ev-cb{0%,66%{transform:scale(1)}72%{transform:scale(1.1)}78%,100%{transform:scale(1)}}
+
+/* ===== 6. a good answer becomes an example query ===== */
+.ex .ghost{opacity:0}
+.ex .hl{transform-box:fill-box;transform-origin:0 50%}
+.ex .a-th{animation-name:ex-th}.ex .a-gh{animation-name:ex-gh}.ex .a-fo{animation-name:ex-fo}.ex .a-hl{animation-name:ex-hl}
+@keyframes ex-th{0%,12%{opacity:0;transform:translate(-18px,-16px) scale(1.8);animation-timing-function:var(--snap)}24%,100%{opacity:1;transform:translate(0,0) scale(1)}}
+@keyframes ex-gh{0%,30%{transform:translate(52px,56px) scale(1);opacity:0}32%,36%{transform:translate(52px,56px) scale(1);opacity:1;animation-timing-function:var(--io)}56%{transform:translate(86px,82px) scale(.45);opacity:1}60%,100%{transform:translate(86px,82px) scale(.45);opacity:0}}
+@keyframes ex-fo{0%,56%{transform:scale(1)}62%{transform:scale(1.15)}68%,100%{transform:scale(1)}}
+@keyframes ex-hl{0%,66%{transform:scaleX(0);animation-timing-function:var(--io)}76%,100%{transform:scaleX(1)}}
+</style>
+</head>
+<body>
+<h1 class="sec">Practice set 3: objects drawn from the Lucide icon set</h1>
+<p class="secd">Same motion rules, but every object is a Lucide icon instead of a hand-drawn shape. Points are from the Robinhood, Databricks and Anthropic articles.</p>
+<div class="grid" style="grid-template-columns:repeat(3,1fr);max-width:1040px">
+
+  <div class="card"><p class="k">Robinhood: the loop</p><h2>Gather context, write the SQL, then verify it</h2><p class="d">The agent plans, pulls context from dashboards and the catalog, writes SQL and checks it before responding.</p>
+    <div class="ic"><svg class="mo xicon agl" data-name="l1_agent_loop" viewBox="0 0 120 120" role="img" aria-label="An agent visits a dashboard, then a catalog, then produces a SQL file that receives a verified shield."><g class="a-all"><g style="transform:translate(32px,28px)"><g class="lu off a-d" style="transform:scale(1.250) translate(-12px,-12px)"><rect width="7" height="9" x="3" y="3" rx="1" /><rect width="7" height="5" x="14" y="3" rx="1" /><rect width="7" height="9" x="14" y="12" rx="1" /><rect width="7" height="5" x="3" y="16" rx="1" /></g></g><g style="transform:translate(74px,28px)"><g class="lu off a-b" style="transform:scale(1.250) translate(-12px,-12px)"><path d="M12 5v16" /><path d="M16 13h2" /><path d="M16 9h2" /><path d="M20.001 19A2 2 0 0022 17V5a2 2 0 00-1.999-2L16 3.002A5 5 0 0012 5a5 5 0 00-4-2H4a2 2 0 00-2 2v12a2 2 0 001.999 2H8a5 5 0 014 2 5 5 0 014-2z" /><path d="M6 13h2" /><path d="M6 9h2" /></g></g><path class="pen draw a-ln" pathLength="1" d="M56 92H66"/><g style="transform:translate(84px,92px)"><g class="c a-f"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.250) translate(-12px,-12px)"><path d="M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="m5 16-3 3 3 3" /><path d="m9 22 3-3-3-3" /></g></g></g></g><g style="transform:translate(104px,74px)"><g class="c a-s"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(0.917) translate(-12px,-12px);color:var(--mark)"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" /><path d="m9 12 2 2 4-4" /></g></g></g></g><g class="botp a-bot"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.167) translate(-12px,-12px);color:var(--mark)"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></g></g></g></g></svg></div></div>
+  <div class="card"><p class="k">Robinhood: safety</p><h2>The agent can look. It cannot edit.</h2><p class="d">It runs as the actual user and is limited to read-only statements.</p>
+    <div class="ic"><svg class="mo xicon ro" data-name="l2_read_only" viewBox="0 0 120 120" role="img" aria-label="An eye reaches a locked gate, the gate lifts and it passes with a check. A pencil is bounced back, turns grey and is marked with a cross."><g class="a-all"><path class="ln" d="M6 94H114" opacity=".35"/><g class="a-g"><path class="ln gate" d="M60 62V94"/><g style="transform:translate(60px,46px)"><g class="lu " style="transform:scale(1.167) translate(-12px,-12px)"><rect width="18" height="11" x="3" y="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></g></g></g><g class="eyep a-e"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.167) translate(-12px,-12px);color:var(--mark)"><path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" /><circle cx="12" cy="12" r="3" /></g></g></g><path class="pen draw a-ck" pathLength="1" d="M84 54l6 6 11-13"/><g class="penp a-p"><g style="transform:translate(0px,0px)"><g class="lu off a-pc" style="transform:scale(1.083) translate(-12px,-12px)"><path d="M13 21h8" /><path d="m15 5 4 4" /><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></g></g></g><text class="glyph x a-x" x="24" y="58">&#215;</text></g></svg></div></div>
+  <div class="card"><p class="k">Databricks: getting started</p><h2>Start with one use case, not the whole data estate</h2><p class="d">Begin with a single high-value use case and a clean slice of data.</p>
+    <div class="ic"><svg class="mo xicon ss" data-name="l3_start_small" viewBox="0 0 120 120" role="img" aria-label="A target passes over a row of databases, then settles on one, which is highlighted while the rest stay grey."><g class="a-all"><g style="transform:translate(26px,34px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></g></g><g style="transform:translate(60px,34px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></g></g><g style="transform:translate(94px,34px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></g></g><g style="transform:translate(26px,78px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></g></g><g style="transform:translate(94px,78px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></g></g><g style="transform:translate(60px,78px)"><rect class="plate c a-pl" x="-17" y="-17" width="34" height="34" rx="6"/></g><g style="transform:translate(60px,78px)"><g class="lu a-db" style="transform:scale(1.083) translate(-12px,-12px)"><ellipse cx="12" cy="5" rx="9" ry="3" /><path d="M3 5V19A9 3 0 0 0 21 19V5" /><path d="M3 12A9 3 0 0 0 21 12" /></g></g><g class="tgp a-t"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.000) translate(-12px,-12px);color:var(--mark)"><circle cx="12" cy="12" r="10" /><circle cx="12" cy="12" r="6" /><circle cx="12" cy="12" r="2" /></g></g></g></g></svg></div></div>
+  <div class="card"><p class="k">Databricks: SQL patterns</p><h2>Answers from a trusted function carry a badge</h2><p class="d">Fixed calculations live in Trusted Functions, and their results are marked Trusted.</p>
+    <div class="ic"><svg class="mo xicon tr" data-name="l4_trusted_function" viewBox="0 0 120 120" role="img" aria-label="A question enters a function, a result table comes out, a badge is stamped on it and the word trusted is highlighted."><g class="a-all"><path class="ln" d="M20 52H30" opacity=".35"/><path class="ln draw a-l2" pathLength="1" d="M64 52H74"/><g style="transform:translate(47px,52px)"><g class="c a-fn"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.417) translate(-12px,-12px)"><rect width="18" height="18" x="3" y="3" rx="2" ry="2" /><path d="M9 17c2 0 2.8-1 2.8-2.8V10c0-2 1-3.3 3.2-3" /><path d="M9 11.2h5.7" /></g></g></g></g><g style="transform:translate(92px,52px)"><g class="c a-tb"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.250) translate(-12px,-12px)"><path d="M3 9h18" /><path d="M9 3v18" /><rect x="3" y="3" width="18" height="18" rx="2" /></g></g></g></g><g style="transform:translate(104px,38px)"><g class="c a-bd"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(0.917) translate(-12px,-12px);color:var(--mark)"><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.77 4.78 4 4 0 0 1-6.75 0 4 4 0 0 1-4.78-4.77 4 4 0 0 1 0-6.76Z" /><path d="m16 9-5.5 5.5L8 12" /></g></g></g></g><g class="a-lb"><rect class="hl a-hl" x="68" y="76" width="46" height="13"/><text class="lbl" x="91" y="86">TRUSTED</text></g><g class="qp a-q"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.000) translate(-12px,-12px);color:var(--mark)"><circle cx="12" cy="12" r="10" /><path d="M9 9.5a3 2.5 0 016 0c0 2-2 2-3 3.5" /><path d="M12 17h.01" /></g></g></g></g></svg></div></div>
+  <div class="card"><p class="k">Anthropic: validation</p><h2>A stakeholder correction becomes a new test</h2><p class="d">Corrections are harvested as new evals, so the same mistake is checked for next time.</p>
+    <div class="ic"><svg class="mo xicon ev" data-name="l5_corrections_to_evals" viewBox="0 0 120 120" role="img" aria-label="A message turns into a warning. A red line travels from it into a checklist and stays there as a new row."><g class="a-all"><path class="ln arc" d="M30 54C30 84 48 96 70 88"/><g style="transform:translate(30px,32px)"><g class="c a-m"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.333) translate(-12px,-12px)"><path d="M22 17a2 2 0 0 1-2 2H6.828a2 2 0 0 0-1.414.586l-2.202 2.202A.71.71 0 0 1 2 21.286V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z" /><path d="M12 15h.01" /><path d="M12 7v4" /></g></g></g></g><g style="transform:translate(86px,68px)"><g class="c a-cb"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.833) translate(-12px,-12px)"><rect width="8" height="4" x="8" y="2" rx="1" ry="1" /><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" /><path d="M12 11h4" /><path d="M12 16h4" /><path d="M8 11h.01" /><path d="M8 16h.01" /></g></g></g></g><g class="fix a-fx"><path class="pen" d="M-6 0H7"/></g></g></svg></div></div>
+  <div class="card"><p class="k">Databricks: feedback</p><h2>A query marked Good becomes an example for next time</h2><p class="d">Experts rate responses, and their final correct queries are added to Example Queries.</p>
+    <div class="ic"><svg class="mo xicon ex" data-name="l6_good_to_example" viewBox="0 0 120 120" role="img" aria-label="A person gives a query a thumbs up. A copy of the query flies into a folder labelled examples, which is highlighted."><g class="a-all"><g style="transform:translate(18px,26px)"><g class="lu " style="transform:scale(1.083) translate(-12px,-12px)"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></g></g><g style="transform:translate(52px,56px)"><g class="lu " style="transform:scale(1.417) translate(-12px,-12px)"><path d="M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="m5 16-3 3 3 3" /><path d="m9 22 3-3-3-3" /></g></g><g style="transform:translate(70px,40px)"><g class="a-th"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(0.917) translate(-12px,-12px);color:var(--mark)"><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z" /><path d="M7 10v12" /></g></g></g></g><g style="transform:translate(86px,82px)"><g class="c a-fo"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.500) translate(-12px,-12px)"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z" /></g></g></g></g><rect class="hl a-hl" x="59" y="103" width="54" height="13"/><text class="lbl" x="86" y="113">EXAMPLES</text><g class="ghost a-gh"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.417) translate(-12px,-12px);color:var(--mark)"><path d="M4 12.15V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.706.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2h-3.35" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="m5 16-3 3 3 3" /><path d="m9 22 3-3-3-3" /></g></g></g></g></svg></div></div>
+</div>
+</body>
+</html>

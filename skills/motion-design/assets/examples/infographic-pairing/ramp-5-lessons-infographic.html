@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5 lessons from putting AI to work with enterprise finance teams</title>
+<style>
+  /* ============================================================
+     DESIGN SYSTEM — modern corporate. Rebrand by editing :root.
+     Keep to <=3 meaningful colors over the neutral base.
+     ============================================================ */
+  :root{
+    --ink:#191919;            /* primary text, near-navy */
+    --muted:#5f594c;          /* secondary text */
+    --faint:#8d8676;          /* captions / fine print */
+    --line:#d9d2c2;           /* hairlines / borders */
+    --bg:#f4efe4;             /* page */
+    --panel:#ebe5d6;          /* soft panel fill */
+    --accent:#191919;         /* primary brand accent */
+    --accent-soft:#ebe5d6;    /* accent tint for fills */
+    --accent-2:#2f8f8f;       /* secondary accent (teal) */
+    --accent-2-soft:#e6f3f3;
+    --good:#2f7d4f; --good-soft:#e8f3ec;
+    --warn:#b3770c; --warn-soft:#f7efdd;
+    --bad:#b5443a;  --bad-soft:#f7e7e5;
+    /* categorical palette — assign ONE hue per category, then show a legend.
+       Use these to color-code lanes / nodes / groups by meaning (not decoration). */
+    --cat-fin:#1f4e79;   --cat-fin-soft:#e9f0f8;   /* finance / FP&A      */
+    --cat-risk:#b5443a;  --cat-risk-soft:#f7e7e5;  /* risk / credit       */
+    --cat-legal:#6b4ea0; --cat-legal-soft:#efe9f6; /* legal / regulatory  */
+    --cat-tech:#2f8f8f;  --cat-tech-soft:#e6f3f3;  /* technology / ops    */
+    --cat-people:#b3770c;--cat-people-soft:#f7efdd; /* people / HR        */
+    --cat-rev:#2f7d4f;   --cat-rev-soft:#e8f3ec;   /* commercial / revenue */
+    --cat-fund:#3b5b8c;  --cat-fund-soft:#e7eefb;  /* deposits / treasury */
+    --cat-imo:#191919;   --cat-imo-soft:#f3e8dd;   /* integration office  */
+    --radius:12px; --radius-sm:8px;
+    --shadow:0 1px 2px rgba(16,32,46,.06), 0 6px 20px rgba(16,32,46,.05);
+    --maxw:1000px;
+    --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+       line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px 80px}
+
+  /* ---- header ---- */
+  header.doc{padding:48px 0 28px;border-bottom:1px solid var(--line);margin-bottom:8px}
+  .eyebrow{font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);
+           font-weight:600;margin:0 0 10px}
+  h1{font-size:34px;line-height:1.2;font-weight:700;margin:0 0 12px;letter-spacing:-.01em}
+  .dek{font-size:18px;color:var(--muted);max-width:64ch;margin:0}
+  .meta{margin-top:16px;font-size:13px;color:var(--faint);display:flex;gap:18px;flex-wrap:wrap}
+
+  /* ---- sticky section nav ---- */
+  nav.toc{position:sticky;top:0;z-index:20;background:rgba(244,239,228,.94);
+          backdrop-filter:saturate(1.2) blur(6px);border-bottom:1px solid var(--line);
+          margin:0 -24px 32px;padding:10px 24px;display:flex;gap:6px;overflow-x:auto}
+  nav.toc a{font-size:13px;color:var(--muted);text-decoration:none;white-space:nowrap;
+            padding:6px 12px;border-radius:99px;transition:.15s}
+  nav.toc a:hover{background:var(--panel);color:var(--ink)}
+  nav.toc a.active{background:var(--accent-soft);color:var(--accent);font-weight:600}
+
+  /* ---- sections ---- */
+  section{margin:44px 0;scroll-margin-top:64px}
+  .takeaway{font-size:22px;font-weight:600;line-height:1.3;margin:0 0 6px;letter-spacing:-.01em}
+  .lead{font-size:15px;color:var(--muted);margin:0 0 20px;max-width:70ch}
+  .caption{font-size:14px;color:var(--muted);margin:14px 0 0;max-width:72ch}
+  .caption strong{color:var(--ink);font-weight:600}
+  .note{font-size:12.5px;color:var(--faint);margin-top:8px}
+
+  /* ---- generic surfaces ---- */
+  .card{background:var(--bg);border:1px solid var(--line);border-radius:var(--radius);
+        padding:18px 20px;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s}
+  .card:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(16,32,46,.08),0 12px 30px rgba(16,32,46,.08)}
+  .panel{background:var(--panel);border-radius:var(--radius);padding:20px 22px}
+
+  /* ---- executive summary band ---- */
+  .summary{background:var(--accent-soft);border:1px solid var(--line);border-radius:var(--radius);
+           padding:22px 24px;margin:24px 0 8px}
+  .summary h2{font-size:14px;text-transform:uppercase;letter-spacing:.04em;color:var(--accent);
+              margin:0 0 8px;font-weight:600}
+  .summary p{margin:0;font-size:16px;color:var(--ink);max-width:74ch}
+
+  /* ---- KPI / stat cards (colour-code by category; add an icon) ---- */
+  .stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px}
+  .stat{border-top:3px solid var(--c,var(--accent))}
+  .stat .top{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+  .stat .num{font-size:30px;font-weight:700;color:var(--c,var(--accent));line-height:1.1}
+  .stat .lbl{font-size:13px;color:var(--muted);margin-top:6px}
+
+  /* ---- badges / pills / legend ---- */
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+        padding:3px 10px;border-radius:99px;background:var(--panel);color:var(--muted)}
+  .pill.accent{background:var(--accent-soft);color:var(--accent)}
+  .pill.good{background:var(--good-soft);color:var(--good)}
+  .pill.warn{background:var(--warn-soft);color:var(--warn)}
+  .pill.bad{background:var(--bad-soft);color:var(--bad)}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:10px 0 0}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block}
+
+  /* ---- icons (inline SVG sprite at top of <body>) ----
+     <svg class="ic"><use href="#ic-user"/></svg> — sizes with font-size, takes color.
+     .ichip = a colored icon badge; pick a category class to color-code by meaning. */
+  .ic{width:1em;height:1em;display:inline-block;vertical-align:-.125em;fill:none;
+      stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .ichip{width:36px;height:36px;border-radius:10px;display:inline-flex;align-items:center;
+         justify-content:center;font-size:20px;flex:none}
+  .ichip.fin{background:var(--cat-fin-soft);color:var(--cat-fin)}
+  .ichip.risk{background:var(--cat-risk-soft);color:var(--cat-risk)}
+  .ichip.legal{background:var(--cat-legal-soft);color:var(--cat-legal)}
+  .ichip.tech{background:var(--cat-tech-soft);color:var(--cat-tech)}
+  .ichip.people{background:var(--cat-people-soft);color:var(--cat-people)}
+  .ichip.rev{background:var(--cat-rev-soft);color:var(--cat-rev)}
+  .ichip.fund{background:var(--cat-fund-soft);color:var(--cat-fund)}
+  .ichip.imo{background:var(--cat-imo-soft);color:var(--cat-imo)}
+  .ichip.ink{background:var(--accent-soft);color:var(--accent)}
+
+  /* ---- expandable detail (native, accessible, no JS needed) ---- */
+  details.more{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+  details.more>summary{cursor:pointer;font-size:13.5px;font-weight:600;color:var(--accent);
+                       list-style:none;display:inline-flex;align-items:center;gap:6px}
+  details.more>summary::-webkit-details-marker{display:none}
+  details.more>summary::before{content:"+";font-size:15px;line-height:1}
+  details.more[open]>summary::before{content:"–"}
+  details.more .body{margin-top:12px}
+
+  /* ---- tooltip on hover (CSS only) ---- */
+  [data-tip]{position:relative;cursor:help;border-bottom:1px dotted var(--faint)}
+  [data-tip]:hover::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(100% + 8px);
+    transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;font-weight:400;
+    line-height:1.4;padding:8px 11px;border-radius:8px;width:max-content;max-width:260px;
+    box-shadow:var(--shadow);z-index:30;white-space:normal}
+
+  svg{display:block;max-width:100%;height:auto}
+  .scroller{overflow-x:auto}
+
+  /* ============================================================
+     RELATIONSHIP PRIMITIVES — labeled edges, as cheap to use as .card.
+     Every meaningful connection gets a VERB and a relation class.
+     HTML proposition row (no SVG needed):
+       <div class="rel">
+         <span class="rnode"><span class="ichip fin">…icon…</span>Credit review</span>
+         <span class="redge" data-verb="feeds"><i class="shaft"></i></span>
+         <span class="rnode">Risk rating</span>
+       </div>
+     SVG edge classes (put on <path>/<line>; add <text class="edge-lbl"> for the verb):
+       .e-seq      sequence / "then"        thin, neutral
+       .e-dep      dependency / "drives"    accent, thicker  (causal chains, converging inputs)
+       .e-handoff  ownership transfer       dashed, distinct (swimlane crossings — the payload)
+       .e-feedback loop back                dashed, curved, muted
+     ============================================================ */
+  .rel{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .rel.stack{flex-direction:column;align-items:stretch}
+  .rnode{display:inline-flex;align-items:center;gap:9px;background:var(--bg);border:1px solid var(--line);
+         border-radius:10px;padding:7px 12px;font-size:13.5px;font-weight:600;box-shadow:var(--shadow)}
+  .rnode .ichip{width:26px;height:26px;border-radius:7px;font-size:15px}
+  .redge{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;
+         flex:0 1 92px;min-width:58px;align-self:center}
+  .redge::before{content:attr(data-verb);font-size:10.5px;font-weight:700;letter-spacing:.05em;
+                 text-transform:uppercase;color:var(--accent);white-space:nowrap;margin-bottom:2px}
+  .redge .shaft{position:relative;display:block;width:100%;height:2px;background:var(--accent)}
+  .redge .shaft::after{content:"";position:absolute;right:-1px;top:-4px;
+                       border:5px solid transparent;border-left:7px solid var(--accent)}
+  .redge.seq::before{color:var(--muted)} .redge.seq .shaft{background:var(--faint)}
+  .redge.seq .shaft::after{border-left-color:var(--faint)}
+  .redge.handoff::before{color:var(--cat-imo)}
+  .redge.handoff .shaft{background:repeating-linear-gradient(90deg,var(--cat-imo) 0 6px,transparent 6px 11px)}
+  .redge.handoff .shaft::after{border-left-color:var(--cat-imo)}
+  .e-seq{stroke:var(--faint);stroke-width:1.6;fill:none}
+  .e-dep{stroke:var(--accent);stroke-width:2.4;fill:none}
+  .e-handoff{stroke:var(--cat-imo);stroke-width:2;stroke-dasharray:7 5;fill:none}
+  .e-feedback{stroke:var(--muted);stroke-width:1.6;stroke-dasharray:3 5;fill:none}
+  .edge-lbl{font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;fill:var(--muted)}
+  .edge-lbl.dep{fill:var(--accent)} .edge-lbl.handoff{fill:var(--cat-imo)}
+
+  /* ============================================================
+     MOTION LAYER — subtle, additive, reduced-motion-safe.
+     The page must be fully legible with NO animation. Motion only
+     reveals/draws content already present; never hides essentials.
+       .reveal            fade+rise a block when it scrolls into view
+       [data-stagger]     fade+rise its children in sequence
+       .ants              marching-ants dash on an SVG connector (stroke)
+       .flow-ants         marching dashes on an HTML connector (border/bar)
+       .draw  (SVG path)  draw the stroke on when in view
+       [data-count="42"]  count a number up to 42 when in view
+     ============================================================ */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease,transform .5s ease}
+  .reveal.in{opacity:1;transform:none}
+  [data-stagger]>*{opacity:0;transform:translateY(12px);transition:opacity .45s ease,transform .45s ease}
+  [data-stagger].in>*{opacity:1;transform:none}
+  .ants{stroke-dasharray:6 5;animation:ants 1s linear infinite}
+  @keyframes ants{to{stroke-dashoffset:-22}}
+  .flow-ants{position:relative;overflow:hidden}
+  .flow-ants::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,
+    transparent,rgba(255,255,255,.55),transparent);transform:translateX(-100%);
+    animation:sheen 2.6s ease-in-out infinite}
+  @keyframes sheen{60%,100%{transform:translateX(100%)}}
+  .draw{stroke-dasharray:var(--len,600);stroke-dashoffset:var(--len,600);transition:stroke-dashoffset 1.1s ease}
+  .draw.in{stroke-dashoffset:0}
+
+  /* ---- motion that ENCODES a relationship (not decoration) ----
+     .flow-dot          <circle class="flow-dot" data-follow="#pathId" r="3.5"/> — a dot
+                        travels source→target along the SVG path: shows DIRECTION of
+                        dependency/flow. Hidden under reduced motion (arrowhead remains).
+     [data-branch]      container for a decision: children with .br-on (chosen path) and
+                        .br-off (rejected). On reveal, .br-off dims — the DECISION lights up.
+     [data-trace]       container for hover-to-trace: nodes carry data-node="id", edges
+                        carry data-link="a b". Hover/focus a node → its edges + neighbors
+                        stay lit, the rest dims: shows CONNECTEDNESS on demand.
+     .handoff-mark      small marker on a lane-crossing; one ripple when revealed:
+                        flags the OWNERSHIP TRANSFER points in a swimlane.               */
+  .flow-dot{fill:var(--accent);opacity:0}
+  .flow-dot.on{opacity:1}
+  [data-branch] .br-off{transition:opacity .6s ease,filter .6s ease}
+  [data-branch].decided .br-off{opacity:.32;filter:grayscale(.65)}
+  [data-branch].decided .br-on .rnode{border-color:var(--accent)}
+  [data-trace].tracing [data-node]:not(.hot){opacity:.22}
+  [data-trace].tracing [data-link]:not(.hot){opacity:.15}
+  [data-trace] [data-node]{transition:opacity .22s ease;cursor:default}
+  [data-trace] [data-link]{transition:opacity .22s ease}
+  .handoff-mark{position:relative}
+  .handoff-mark.in::after{content:"";position:absolute;inset:-6px;border-radius:50%;
+    border:2px solid var(--cat-imo);opacity:0;animation:hoflash 1s ease-out 1}
+  @keyframes hoflash{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.6);opacity:0}}
+
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    .reveal,[data-stagger]>*{opacity:1!important;transform:none!important;transition:none!important}
+    .ants,.flow-ants::after{animation:none!important}
+    .draw{stroke-dashoffset:0!important;transition:none!important}
+    .flow-dot{display:none}
+    [data-branch] .br-off{transition:none!important}
+    .handoff-mark.in::after{animation:none!important;opacity:0}
+    [data-trace] [data-node],[data-trace] [data-link]{transition:none!important}
+  }
+
+  /* ---- print / save-to-PDF ---- */
+  @media print{
+    nav.toc{display:none}
+    .card,.summary{box-shadow:none}
+    section{break-inside:avoid}
+    body{font-size:12pt}
+    .reveal,[data-stagger]>*{opacity:1!important;transform:none!important}
+    .draw{stroke-dashoffset:0!important}
+    .flow-dot{display:none}
+    [data-trace] [data-node],[data-trace] [data-link]{opacity:1!important}
+  }
+  @media (max-width:640px){ h1{font-size:27px} .takeaway{font-size:19px} nav.toc{margin-bottom:20px} }
+
+  /* ============ motion-design base (explainer icons) ============ */
+  :root{--paper:var(--bg);--mute:#c9c2b2;--mute-text:#8d8676;--hl:#ffd60a;--mark:#e5381c;
+    --io:cubic-bezier(.645,.045,.355,1);--out:cubic-bezier(.165,.84,.44,1);--snap:cubic-bezier(.19,1,.22,1)}
+  .mo{display:block;background:var(--paper);color:var(--ink);font-family:var(--font)}
+  svg.mo{width:100%;height:auto;overflow:visible}
+  .mo text{font-family:var(--font);fill:currentColor}
+  .mo .ln{fill:none;stroke:currentColor;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+  .mo .pen{fill:none;stroke:var(--mark);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+  .xicon{--loop:5.5s}
+  .xicon *{transform-box:view-box;transform-origin:0 0}
+  .xicon .draw{stroke-dasharray:1;stroke-dashoffset:0;transition:none}
+  .xicon .a-all{animation-name:x-all}
+  @keyframes x-all{0%{opacity:0}4%,95%{opacity:1}100%{opacity:0}}
+  .xicon .glyph{fill:var(--mark);font:800 26px/1 var(--font);transform-box:fill-box;transform-origin:50% 60%;text-anchor:middle}
+  .xicon .c{transform-box:fill-box;transform-origin:50% 50%}
+  .xicon [class*="a-"]{animation-duration:var(--loop);animation-iteration-count:infinite;animation-timing-function:linear;animation-fill-mode:both}
+  .reveal:not(.in) .xicon [class*="a-"]{animation-play-state:paused}       /* icons wait until scrolled into view */
+  .mo.static [class*="a-"]{animation:none!important}
+  @media print,(prefers-reduced-motion:reduce){.mo [class*="a-"]{animation:none!important}}
+  .xicon .lu{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .xicon .plate{fill:var(--hl)}
+  .xicon .off{color:var(--mute-text)}
+  .xicon .hl{fill:var(--hl)}
+  .xicon .lbl{font:800 8.5px/1 var(--font);letter-spacing:.05em;text-anchor:middle;fill:currentColor}
+  .xicon .chip rect{fill:var(--mark)}.xicon .chip text{fill:var(--paper);font:800 9.5px/1 var(--font);text-anchor:middle}
+  .xicon .chipo rect{fill:var(--paper);stroke:currentColor;stroke-width:2.5}.xicon .chipo text{fill:currentColor;font:800 9.5px/1 var(--font);text-anchor:middle}
+  .xicon .box{fill:var(--paper);stroke:currentColor;stroke-width:2.5}
+  .xicon .ck{stroke:var(--ink);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;fill:none}
+
+  /* ---- 1. the question: invoice = PO, but not the contract ---- */
+  .q1 .eq{fill:var(--ink)}
+  .q1 .a-eq{animation-name:q1-eq}.q1 .a-ct{animation-name:q1-ct}.q1 .a-pl{animation-name:q1-pl}.q1 .a-ne{animation-name:q1-ne}.q1 .a-inv{animation-name:q1-inv}.q1 .a-cl{animation-name:q1-cl}
+  @keyframes q1-eq{0%,10%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}17%,100%{opacity:1;transform:scale(1)}}
+  @keyframes q1-ct{0%,32%{opacity:0;transform:translate(0,-18px);animation-timing-function:var(--snap)}44%,100%{opacity:1;transform:translate(0,0)}}
+  @keyframes q1-cl{0%,38%{opacity:0}46%,100%{opacity:1}}
+  @keyframes q1-pl{0%,46%{opacity:0;transform:scale(.6);animation-timing-function:var(--snap)}53%,100%{opacity:1;transform:scale(1)}}
+  @keyframes q1-ne{0%,58%{opacity:0;transform:scale(.6);animation-timing-function:var(--out)}65%,100%{opacity:1;transform:scale(1)}}
+  @keyframes q1-inv{0%,60%{color:var(--ink)}68%,100%{color:var(--mark)}}
+
+  /* ---- 2. definitions: three workbooks, one rule set, one CAC ---- */
+  .d2 .v{opacity:0}.d2 .v rect{fill:var(--paper);stroke:var(--mark);stroke-width:2}.d2 .v text{fill:var(--mark);font:800 8.5px/1 var(--font);text-anchor:middle}
+  .d2 .hlr{transform-box:fill-box;transform-origin:0 50%}
+  .d2 .out{transform:translate(60px,102px)}
+  .d2 .a-v1{animation-name:d2-v1}.d2 .a-v2{animation-name:d2-v2}.d2 .a-v3{animation-name:d2-v3}.d2 .a-bx{animation-name:d2-bx}.d2 .a-o{animation-name:d2-o}.d2 .a-hl{animation-name:d2-hl}.d2 .a-ck{animation-name:d2-ck}
+  @keyframes d2-v1{0%,6%{transform:translate(24px,46px) rotate(-9deg);opacity:0}10%,16%{transform:translate(24px,46px) rotate(-9deg);opacity:1;animation-timing-function:var(--io)}28%{transform:translate(60px,70px) rotate(0deg);opacity:1}31%,100%{transform:translate(60px,70px);opacity:0}}
+  @keyframes d2-v2{0%,6%{transform:translate(60px,46px) rotate(6deg);opacity:0}10%,24%{transform:translate(60px,46px) rotate(6deg);opacity:1;animation-timing-function:var(--io)}36%{transform:translate(60px,70px) rotate(0deg);opacity:1}39%,100%{transform:translate(60px,70px);opacity:0}}
+  @keyframes d2-v3{0%,6%{transform:translate(96px,46px) rotate(-5deg);opacity:0}10%,32%{transform:translate(96px,46px) rotate(-5deg);opacity:1;animation-timing-function:var(--io)}44%{transform:translate(60px,70px) rotate(0deg);opacity:1}47%,100%{transform:translate(60px,70px);opacity:0}}
+  @keyframes d2-bx{0%,44%{transform:scale(1)}50%{transform:scale(1.12)}56%,100%{transform:scale(1)}}
+  @keyframes d2-o{0%,54%{transform:translate(60px,74px);opacity:0}57%{transform:translate(60px,74px);opacity:1;animation-timing-function:var(--snap)}68%,100%{transform:translate(60px,102px);opacity:1}}
+  @keyframes d2-hl{0%,68%{transform:scaleX(0);animation-timing-function:var(--io)}76%,100%{transform:scaleX(1)}}
+  @keyframes d2-ck{0%,76%{stroke-dashoffset:1;visibility:hidden}77%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}84%,100%{stroke-dashoffset:0;visibility:visible}}
+
+  /* ---- 3. evidence: the rejected option shows its reason; a person approves ---- */
+  .e3 .a-top{animation-name:e3-top}.e3 .a-x{animation-name:e3-x}.e3 .a-rs{animation-name:e3-rs}.e3 .a-pl{animation-name:e3-pl}.e3 .a-ln{animation-name:e3-ln}.e3 .a-us{animation-name:e3-us}.e3 .a-st{animation-name:e3-st}
+  .e3 .rsn{transform:translate(78px,30px)}
+  @keyframes e3-top{0%,16%{color:var(--ink)}24%,100%{color:var(--mute-text)}}
+  @keyframes e3-x{0%,16%{stroke-dashoffset:1;visibility:hidden}17%{stroke-dashoffset:1;visibility:visible}24%,100%{stroke-dashoffset:0;visibility:visible}}
+  @keyframes e3-rs{0%,28%{transform:translate(40px,30px);opacity:0}31%{transform:translate(40px,30px);opacity:1;animation-timing-function:var(--snap)}42%,100%{transform:translate(78px,30px);opacity:1}}
+  @keyframes e3-pl{0%,46%{opacity:0;transform:scale(.6);animation-timing-function:var(--snap)}53%,100%{opacity:1;transform:scale(1)}}
+  @keyframes e3-ln{0%,54%{stroke-dashoffset:1;visibility:hidden}55%{stroke-dashoffset:1;visibility:visible;animation-timing-function:var(--io)}63%,100%{stroke-dashoffset:0;visibility:visible}}
+  @keyframes e3-us{0%,60%{opacity:0;transform:scale(.6);animation-timing-function:var(--snap)}67%,100%{opacity:1;transform:scale(1)}}
+  @keyframes e3-st{0%,70%{opacity:0;transform:translate(34px,-24px) scale(1.6);animation-timing-function:var(--snap)}80%,100%{opacity:1;transform:translate(0,0) scale(1)}}
+
+  /* ---- 4. work left behind: the pile for the accountant ---- */
+  .w4 .row{stroke-width:4}
+  .w4 .a-r1{animation-name:w4-r1}.w4 .a-r2{animation-name:w4-r2}.w4 .a-r3{animation-name:w4-r3}.w4 .a-r4{animation-name:w4-r4}.w4 .a-r5{animation-name:w4-r5}.w4 .a-r6{animation-name:w4-r6}
+  .w4 .a-keep{animation-name:w4-keep}.w4 .a-clip{animation-name:w4-clip}.w4 .a-bot{animation-name:w4-bot}
+  .w4 .gone{opacity:0}
+  @keyframes w4-bot{0%,8%{transform:scale(1)}11%{transform:scale(1.12)}14%,16%{transform:scale(1)}19%{transform:scale(1.12)}22%,24%{transform:scale(1)}27%{transform:scale(1.12)}30%,32%{transform:scale(1)}35%{transform:scale(1.12)}38%,100%{transform:scale(1)}}
+  @keyframes w4-r1{0%,8%{opacity:0;transform:translate(-34px,-30px);stroke:var(--ink)}14%,40%{opacity:1;transform:translate(0,0);stroke:var(--ink)}46%,62%{stroke:var(--mark)}70%,100%{opacity:1;transform:translate(0,0);stroke:var(--ink)}}
+  @keyframes w4-r2{0%,13%{opacity:0;transform:translate(-34px,-24px);stroke:var(--ink)}19%,40%{opacity:1;transform:translate(0,0);stroke:var(--ink)}46%,62%{stroke:var(--mark)}70%,100%{opacity:1;transform:translate(0,0);stroke:var(--ink)}}
+  @keyframes w4-r3{0%,18%{opacity:0;transform:translate(-34px,-18px);stroke:var(--ink)}24%,40%{opacity:1;transform:translate(0,0);stroke:var(--ink)}46%,62%{opacity:1;stroke:var(--mark);transform:translate(0,0)}72%,100%{opacity:0;stroke:var(--mark);transform:translate(0,14px)}}
+  @keyframes w4-r4{0%,23%{opacity:0;transform:translate(-34px,-12px);stroke:var(--ink)}29%,40%{opacity:1;transform:translate(0,0);stroke:var(--ink)}46%,62%{opacity:1;stroke:var(--mark);transform:translate(0,0)}72%,100%{opacity:0;stroke:var(--mark);transform:translate(0,20px)}}
+  @keyframes w4-r5{0%,28%{opacity:0;transform:translate(-34px,-6px);stroke:var(--ink)}34%,40%{opacity:1;transform:translate(0,0);stroke:var(--ink)}46%,62%{opacity:1;stroke:var(--mark);transform:translate(0,0)}72%,100%{opacity:0;stroke:var(--mark);transform:translate(0,26px)}}
+  @keyframes w4-r6{0%,33%{opacity:0;transform:translate(-34px,0);stroke:var(--mark)}39%,62%{opacity:1;transform:translate(0,0);stroke:var(--mark)}72%,100%{opacity:0;stroke:var(--mark);transform:translate(0,32px)}}
+  @keyframes w4-clip{0%,52%{opacity:0;transform:scale(1.8);animation-timing-function:var(--snap)}60%,100%{opacity:1;transform:scale(1)}}
+
+  /* ---- 5. rule change: the right case changes, the others do not ---- */
+  .r5 .xm{stroke:var(--mark);stroke-width:3.5;stroke-linecap:round;fill:none;opacity:0}
+  .r5 .v1{opacity:0}
+  .r5 .sweep{stroke:var(--mark);stroke-width:2;stroke-dasharray:.1 5;stroke-linecap:round;opacity:0}
+  .r5 .a-v1{animation-name:r5-v1}.r5 .a-v2{animation-name:r5-v2}.r5 .a-rb{animation-name:r5-rb}.r5 .a-sw{animation-name:r5-sw}.r5 .a-x{animation-name:r5-x}.r5 .a-k{animation-name:r5-k}.r5 .a-pl{animation-name:r5-pl}.r5 .a-kb{animation-name:r5-kb}.r5 .a-kc{animation-name:r5-kc}
+  @keyframes r5-v1{0%,22%{opacity:1}28%,100%{opacity:0}}
+  @keyframes r5-v2{0%,22%{opacity:0}28%,100%{opacity:1}}
+  @keyframes r5-rb{0%,22%{transform:scale(1)}27%{transform:scale(1.14)}32%,100%{transform:scale(1)}}
+  @keyframes r5-sw{0%,36%{opacity:0;transform:translateY(0)}38%{opacity:1;transform:translateY(0)}64%{opacity:1;transform:translateY(64px)}68%,100%{opacity:0;transform:translateY(64px)}}
+  @keyframes r5-x{0%,4%{opacity:0}8%,44%{opacity:1}48%,100%{opacity:0}}
+  @keyframes r5-k{0%,47%{stroke-dashoffset:1;visibility:hidden}48%{stroke-dashoffset:1;visibility:visible}55%,100%{stroke-dashoffset:0;visibility:visible}}
+  @keyframes r5-pl{0%,54%{opacity:0;transform:scale(.6);animation-timing-function:var(--snap)}61%,100%{opacity:1;transform:scale(1)}}
+  @keyframes r5-kb{0%,52%{transform:scale(1)}56%{transform:scale(1.25)}60%,100%{transform:scale(1)}}
+  @keyframes r5-kc{0%,60%{transform:scale(1)}64%{transform:scale(1.25)}68%,100%{transform:scale(1)}}
+
+  /* ============ page-level additions ============ */
+  h1{font-weight:800;letter-spacing:-.02em;font-size:38px;line-height:1.1}
+  .takeaway{font-weight:800;letter-spacing:-.015em;font-size:25px;line-height:1.15}
+  .eyebrow{color:var(--mute-text)}
+  .lesson{display:grid;grid-template-columns:200px 1fr;gap:30px;align-items:center;margin-bottom:18px}
+  .lesson .icw{width:200px}
+  .lesson .lead{margin:6px 0 0}
+  .ichip.ai{background:var(--ink);color:var(--bg)} .ichip.hu{background:var(--hl);color:var(--ink)}
+  .ichip.doc{background:var(--panel);color:var(--ink)} .ichip.old{background:transparent;color:var(--faint);border:1px dashed var(--faint)}
+  .rnode{background:var(--bg);font-size:13px;padding:6px 10px}
+  .redge{flex:0 1 84px}
+  .rel.tight .redge{flex:0 1 54px;min-width:44px}
+  [data-branch].decided .br-off{opacity:.62;filter:none}
+  .rnode.old{color:var(--faint);box-shadow:none;border-style:dashed}
+  .rnode.flag{border-color:var(--mark);color:var(--mark)}
+  .rnode.hu{border-color:var(--ink);background:#fff7cf}
+  .redge.miss::before{color:var(--mark)} .redge.miss .shaft{background:var(--mark)} .redge.miss .shaft::after{border-left-color:var(--mark)}
+  .rows{display:grid;gap:14px}
+  .rowlab{font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+  .fork{display:grid;grid-template-columns:auto 1fr;gap:10px 8px;align-items:center}
+  table.cmp{border-collapse:collapse;width:100%;font-size:14.5px}
+  table.cmp th{font-size:11.5px;text-transform:uppercase;letter-spacing:.06em;text-align:left;color:var(--faint);padding:8px 14px;border-bottom:3px solid var(--ink)}
+  table.cmp td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+  table.cmp td:first-child{font-weight:700;white-space:nowrap}
+  table.cmp td.old{color:var(--faint)} table.cmp td.new{font-weight:600}
+  table.cmp .hu{background:#fff7cf}
+  mark.h{background:var(--hl);color:var(--ink);padding:1px 5px}
+  @media (max-width:720px){.lesson{grid-template-columns:1fr}.lesson .icw{width:170px}}
+</style>
+</head>
+<body>
+<!-- Icons: Lucide (ISC) -->
+
+<div class="wrap">
+  <header class="doc">
+    <p class="eyebrow">Applied AI in finance &middot; visual summary</p>
+    <h1>5 lessons from putting AI to work with enterprise finance teams</h1>
+    <p class="dek">What separates a finance AI workflow that gets used from one that creates more checking, drawn from Ramp's first months of client engagements.</p>
+    <div class="meta"><span>Source: Ori Daniel, Head of Applied AI Solutions, Ramp</span><span>Published October 26, 2026</span></div>
+  </header>
+
+  <nav class="toc" aria-label="Sections">
+    <a href="#summary" class="active">Summary</a><a href="#s1">1 Question</a><a href="#s2">2 Definitions</a><a href="#s3">3 Evidence</a><a href="#s4">4 Work left</a><a href="#s5">5 Rule changes</a><a href="#who">Who decides</a>
+  </nav>
+
+  <section id="summary">
+    <div class="summary reveal">
+      <h2>The bottom line</h2>
+      <p>The workflows that held up were built around a <mark class="h">specific question</mark>, used <mark class="h">definitions finance had already agreed</mark>, showed <mark class="h">evidence a reviewer could check</mark>, were judged by the <mark class="h">work they left for the team</mark>, and were <mark class="h">tested when rules changed</mark>. In all five, the AI prepares the case and a named person makes the decision. The article offers these as directional guidance and reports no time-saved or ROI figures.</p>
+    </div>
+  </section>
+
+  <section id="s1">
+    <div class="lesson">
+      <div class="icw reveal"><svg class="mo xicon q1" data-name="ramp1_question" viewBox="0 0 120 120" role="img" aria-label="An invoice and a purchase order match. Then the contract appears, is highlighted, and a not-equal sign shows the invoice does not match it."><g class="a-all"><g class="a-inv"><g style="transform:translate(30px,32px)"><g class="lu " style="transform:scale(1.417) translate(-12px,-12px)"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></g></g></g><g style="transform:translate(86px,32px)"><g class="lu " style="transform:scale(1.417) translate(-12px,-12px)"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></g></g><text class="glyph eq a-eq" x="58" y="40">=</text><text class="lbl" x="30" y="60">INVOICE</text><text class="lbl" x="86" y="60">PO</text><g style="transform:translate(64px,90px)"><rect class="plate c a-pl" x="-19" y="-19" width="38" height="38" rx="7"/></g><g class="a-ct"><g style="transform:translate(64px,90px)"><g class="lu " style="transform:scale(1.333) translate(-12px,-12px)"><path d="M15 12h-5" /><path d="M15 8h-5" /><path d="M19 17V5a2 2 0 0 0-2-2H4" /><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></g></g></g><text class="lbl a-cl" x="64" y="118">CONTRACT</text><text class="glyph a-ne" x="30" y="98">&#8800;</text></g></svg></div>
+      <div><p class="eyebrow">Lesson 1</p><h2 class="takeaway">Start from the business question, not the data that happens to match</h2><p class="lead">A specific question tells the workflow which evidence it needs for the decision.</p></div>
+    </div>
+    <div class="reveal"><div class="rows" data-branch><div class="br-off"><p class="rowlab">The check that passed</p><div class="rel"><span class="rnode old"><span class="ichip old"><svg class="ic" viewBox="0 0 24 24"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></svg></span>Invoice</span><span class="redge seq" data-verb="matches"><i class="shaft"></i></span><span class="rnode old"><span class="ichip old"><svg class="ic" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg></span>Purchase order</span><span class="redge miss" data-verb="lets through"><i class="shaft"></i></span><span class="rnode flag"><span class="ichip old"><svg class="ic" viewBox="0 0 24 24"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3" /><path d="M12 9v4" /><path d="M12 17h.01" /></svg></span>Outdated rate on both</span></div></div><div class="br-on"><p class="rowlab">The question: are suppliers charging the negotiated price?</p><div class="rel"><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></svg></span>Each invoice line</span><span class="redge " data-verb="linked to"><i class="shaft"></i></span><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><path d="M15 12h-5" /><path d="M15 8h-5" /><path d="M19 17V5a2 2 0 0 0-2-2H4" /><path d="M8 21h12a2 2 0 0 0 2-2v-1a1 1 0 0 0-1-1H11a1 1 0 0 0-1 1v1a2 2 0 1 1-4 0V5a2 2 0 1 0-4 0v2a1 1 0 0 0 1 1h3" /></svg></span>Contract term</span><span class="redge " data-verb="recalculates"><i class="shaft"></i></span><span class="rnode "><span class="ichip ai"><svg class="ic" viewBox="0 0 24 24"><path d="M13 5h8" /><path d="M13 12h8" /><path d="M13 19h8" /><path d="m3 17 2 2 4-4" /><path d="m3 7 2 2 4-4" /></svg></span>Review queue</span><span class="redge handoff" data-verb="hands to"><i class="shaft"></i></span><span class="rnode hu"><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></svg></span>Buyer decides</span></div></div></div></div>
+    <p class="caption"><strong>What to notice:</strong> the invoice-to-PO match was not wrong, it answered a different question. Tying each line to the contract is what surfaces the discrepancy, and the decision to pursue it stays with the buyer.</p>
+    <details class="more"><summary>The case behind it</summary><div class="body"><p class="caption" style="margin-top:0">A distributor's procurement team wanted to know whether suppliers were charging negotiated prices. Invoices matched purchase orders, but an outdated rate could appear on both and pass. The workflow linked each invoice line to its contract terms; the review queue showed a recalculated amount and the supporting term for each possible discrepancy. Buyers checked the flags and prepared questions for suppliers.</p></div></details>
+  </section>
+  <section id="s2">
+    <div class="lesson">
+      <div class="icw reveal"><svg class="mo xicon d2" data-name="ramp2_definitions" viewBox="0 0 120 120" role="img" aria-label="Three workbooks each produce a different version of CAC. The three go into one agreed rule set and a single CAC comes out, highlighted and checked."><g class="a-all"><g style="transform:translate(24px,20px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M8 13h2" /><path d="M14 13h2" /><path d="M8 17h2" /><path d="M14 17h2" /></g></g><g style="transform:translate(60px,20px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M8 13h2" /><path d="M14 13h2" /><path d="M8 17h2" /><path d="M14 17h2" /></g></g><g style="transform:translate(96px,20px)"><g class="lu off" style="transform:scale(1.083) translate(-12px,-12px)"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M8 13h2" /><path d="M14 13h2" /><path d="M8 17h2" /><path d="M14 17h2" /></g></g><g style="transform:translate(60px,72px)"><g class="c a-bx"><rect class="box" x="-25" y="-9" width="50" height="18" rx="3"/><text class="lbl" y="3.2">RULES</text></g></g><g class="v a-v1"><rect x="-13" y="-7.5" width="26" height="15" rx="7.5"/><text y="3">CAC</text></g><g class="v a-v2"><rect x="-13" y="-7.5" width="26" height="15" rx="7.5"/><text y="3">CAC</text></g><g class="v a-v3"><rect x="-13" y="-7.5" width="26" height="15" rx="7.5"/><text y="3">CAC</text></g><rect class="hl hlr a-hl" x="40" y="92" width="40" height="20"/><g class="chipo out a-o"><rect x="-15" y="-9" width="30" height="18" rx="9"/><text y="3.4">CAC</text></g><path class="pen draw a-ck" pathLength="1" d="M88 100l5 5 9-11"/></g></svg></div>
+      <div><p class="eyebrow">Lesson 2</p><h2 class="takeaway">Give AI the definitions finance has agreed, or it will reproduce the disagreement</h2><p class="lead">Finance work leaves almost no room for error, so the agent needs the team's own rules for what counts and how shared costs are split.</p></div>
+    </div>
+    <div class="reveal"><table class="cmp"><thead><tr><th></th><th>Before: each workbook decides</th><th>After: finance decides once</th></tr></thead><tbody><tr><td>Shared costs</td><td class="old">Allocated differently in each workbook</td><td class="new hu">One approved split, agreed by finance</td></tr><tr><td>Customer identity</td><td class="old">Sales and finance use different identifiers</td><td class="new">Reconciled as part of the agreed rules</td></tr><tr><td>The calculation</td><td class="old">Rebuilt by hand; data in separate systems</td><td class="new">Agent applies the approved rules; repeatable and explainable</td></tr><tr><td>When a number looks off</td><td class="old">Hard to say which assumption caused it</td><td class="new">Traced to its inputs, corrected, rerun</td></tr></tbody></table></div>
+    <p class="caption"><strong>What to notice:</strong> the agent did not invent a definition of customer acquisition cost. Finance agreed one, and the agent's job was to apply it the same way every time and show its working.</p>
+    <details class="more"><summary>The case behind it</summary><div class="body"><p class="caption" style="margin-top:0">A software company's finance team was comparing customer acquisition cost across products. Workbooks allocated shared costs differently, the data sat in separate systems, and sales and finance used different customer identifiers. Finance agreed which costs belonged in the comparison and how to split shared costs, then gave those rules to the agent. In review, finance traced an unexpected difference to a shared-cost assumption, corrected it and reran the comparison.</p></div></details>
+  </section>
+  <section id="s3">
+    <div class="lesson">
+      <div class="icw reveal"><svg class="mo xicon e3" data-name="ramp3_evidence" viewBox="0 0 120 120" role="img" aria-label="Two funding options. The cheaper one is struck out and a reason slides out beside it. The other is highlighted, handed to an approver, and stamped."><g class="a-all"><g class="a-top"><g style="transform:translate(24px,30px)"><g class="lu " style="transform:scale(1.333) translate(-12px,-12px)"><rect width="20" height="12" x="2" y="6" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></g></g></g><path class="pen draw a-x" pathLength="1" d="M10 42L38 18"/><g class="chipo rsn a-rs"><rect x="-23" y="-9" width="46" height="18" rx="9"/><text y="3.4">REASON</text></g><g style="transform:translate(24px,84px)"><rect class="plate c a-pl" x="-20" y="-15" width="40" height="30" rx="6"/></g><g style="transform:translate(24px,84px)"><g class="lu " style="transform:scale(1.333) translate(-12px,-12px)"><rect width="20" height="12" x="2" y="6" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></g></g><path class="ln draw a-ln" pathLength="1" d="M48 84H72" style="stroke-width:2.5"/><g style="transform:translate(92px,80px)"><g class="c a-us"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.250) translate(-12px,-12px)"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></g></g><text class="lbl" x="0" y="26">APPROVER</text></g></g><g style="transform:translate(44px,66px)"><g class="a-st"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.000) translate(-12px,-12px);color:var(--mark)"><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13" /><path d="M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z" /><path d="M5 22h14" /></g></g></g></g></g></svg></div>
+      <div><p class="eyebrow">Lesson 3</p><h2 class="takeaway">An approval needs evidence and a named approver. "Be careful" is not a control.</h2><p class="lead">Reviewers need to see which constraints a recommendation meets and why the alternatives were rejected.</p></div>
+    </div>
+    <div class="reveal"><div class="rows" data-branch><div class="br-off"><p class="rowlab">The alternative</p><div class="rel"><span class="rnode old"><span class="ichip old"><svg class="ic" viewBox="0 0 24 24"><rect width="20" height="12" x="2" y="6" rx="2" /><circle cx="12" cy="12" r="2" /><path d="M6 12h.01M18 12h.01" /></svg></span>Lower-cost funding option</span><span class="redge miss" data-verb="excluded because"><i class="shaft"></i></span><span class="rnode "><span class="ichip ai"><svg class="ic" viewBox="0 0 24 24"><path d="M6 22a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h8a2.4 2.4 0 0 1 1.704.706l3.588 3.588A2.4 2.4 0 0 1 20 8v12a2 2 0 0 1-2 2z" /><path d="M14 2v5a1 1 0 0 0 1 1h5" /><path d="M10 9H8" /><path d="M16 13H8" /><path d="M16 17H8" /></svg></span>Why each asset qualified or failed</span></div></div><div class="br-on"><p class="rowlab">The recommendation</p><div class="rel"><span class="rnode "><span class="ichip ai"><svg class="ic" viewBox="0 0 24 24"><rect width="16" height="20" x="4" y="2" rx="2" /><line x1="8" x2="16" y1="6" y2="6" /><line x1="16" x2="16" y1="14" y2="18" /><path d="M16 10h.01" /><path d="M12 10h.01" /><path d="M8 10h.01" /><path d="M12 14h.01" /><path d="M8 14h.01" /><path d="M12 18h.01" /><path d="M8 18h.01" /></svg></span>Scenarios + remaining capacity</span><span class="redge " data-verb="traced by"><i class="shaft"></i></span><span class="rnode hu"><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>Treasury review</span><span class="redge handoff" data-verb="approves"><i class="shaft"></i></span><span class="rnode hu"><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><path d="M14 13V8.5C14 7 15 7 15 5a3 3 0 0 0-6 0c0 2 1 2 1 3.5V13" /><path d="M20 15.5a2.5 2.5 0 0 0-2.5-2.5h-11A2.5 2.5 0 0 0 4 15.5V17a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1z" /><path d="M5 22h14" /></svg></span>Named approver</span><span class="redge handoff" data-verb="executes"><i class="shaft"></i></span><span class="rnode hu"><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><path d="M10 18v-7" /><path d="M11.119 2.205a2 2 0 0 1 1.762 0l7.84 3.846A.5.5 0 0 1 20.5 7h-17a.5.5 0 0 1-.22-.949z" /><path d="M14 18v-7" /><path d="M18 18v-7" /><path d="M3 22h18" /><path d="M6 18v-7" /></svg></span>Authorized staff</span></div></div></div></div>
+    <p class="caption"><strong>What to notice:</strong> three separate human roles follow the AI step: review, approval and execution. The workflow names who holds each one instead of relying on a cautious prompt.</p>
+    <details class="more"><summary>The case behind it</summary><div class="body"><p class="caption" style="margin-top:0">In a treasury review, the team needed to understand why a lower-cost funding option had been excluded. Analysts had been combining asset data with agreements, eligibility rules and facility limits by hand. The workflow prepared scenarios with reviewed calculations, remaining facility capacity and an explanation of why each asset qualified or failed, so treasury could trace exclusions, check feasible alternatives and route the recommendation for approval.</p></div></details>
+  </section>
+  <section id="s4">
+    <div class="lesson">
+      <div class="icw reveal"><svg class="mo xicon w4" data-name="ramp4_work_left" viewBox="0 0 120 120" role="img" aria-label="An agent sends six proposed matches into an accountant's tray; the pile turns red. A paperclip of evidence is attached and the pile shrinks to two."><g class="a-all"><g style="transform:translate(22px,30px)"><g class="c a-bot"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(1.167) translate(-12px,-12px);color:var(--mark)"><path d="M12 8V4H8" /><rect width="16" height="12" x="4" y="8" rx="2" /><path d="M2 14h2" /><path d="M20 14h2" /><path d="M15 13v2" /><path d="M9 13v2" /></g></g></g></g><g style="transform:translate(22px,96px)"><g class="lu " style="transform:scale(1.167) translate(-12px,-12px)"><circle cx="12" cy="8" r="5" /><path d="M20 21a8 8 0 0 0-16 0" /></g></g><g style="transform:translate(85px,102px)"><g class="lu " style="transform:scale(1.417) translate(-12px,-12px)"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></g></g><path class="ln row  a-r1" d="M70 87H100"/><path class="ln row  a-r2" d="M70 78H100"/><path class="ln row gone a-r3" d="M70 69H100"/><path class="ln row gone a-r4" d="M70 60H100"/><path class="ln row gone a-r5" d="M70 51H100"/><path class="ln row gone a-r6" d="M70 42H100"/><g style="transform:translate(108px,74px)"><g class="c a-clip"><g style="transform:translate(0px,0px)"><g class="lu " style="transform:scale(0.833) translate(-12px,-12px)"><path d="m16 6-8.414 8.586a2 2 0 0 0 2.829 2.829l8.414-8.586a4 4 0 1 0-5.657-5.657l-8.379 8.551a6 6 0 1 0 8.485 8.485l8.379-8.551" /></g></g></g></g><text class="lbl" x="85" y="24">TO CHECK</text></g></svg></div>
+      <div><p class="eyebrow">Lesson 4</p><h2 class="takeaway">Judge a workflow by the work it leaves behind, not the output it produces</h2><p class="lead">The value is in how much checking, correction and follow-up remains for the team.</p></div>
+    </div>
+    <div class="reveal"><div class="rows"><div><p class="rowlab">What changed in the reconciliation</p><div class="rel"><span class="rnode "><span class="ichip ai"><svg class="ic" viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2" /><path d="M15 7h2a5 5 0 1 1 0 10h-2" /><line x1="8" x2="16" y1="12" y2="12" /></svg></span>Entries grouped, evidence attached</span><span class="redge " data-verb="separates"><i class="shaft"></i></span><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" /><path d="M12 6v6l4 2" /></svg></span>Routine timing differences</span></div><div class="rel" style="margin-top:10px"><span class="rnode "><span class="ichip ai"><svg class="ic" viewBox="0 0 24 24"><path d="M9 17H7A5 5 0 0 1 7 7h2" /><path d="M15 7h2a5 5 0 1 1 0 10h-2" /><line x1="8" x2="16" y1="12" y2="12" /></svg></span>Same proposed matches</span><span class="redge handoff" data-verb="leaves"><i class="shaft"></i></span><span class="rnode hu"><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><polyline points="22 12 16 12 14 15 10 15 8 12 2 12" /><path d="M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z" /></svg></span>Smaller exception queue</span></div></div><div><p class="rowlab">What still has to be measured</p><div class="rel tight"><span class="rnode "><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><path d="m21 21-4.34-4.34" /><circle cx="11" cy="11" r="8" /></svg></span>Checking</span><span class="redge seq" data-verb="plus"><i class="shaft"></i></span><span class="rnode "><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><path d="M13 21h8" /><path d="m15 5 4 4" /><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z" /></svg></span>Correcting</span><span class="redge seq" data-verb="plus"><i class="shaft"></i></span><span class="rnode "><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z" /><path d="m21.854 2.147-10.94 10.939" /></svg></span>Follow-up</span><span class="redge seq" data-verb="plus"><i class="shaft"></i></span><span class="rnode "><span class="ichip ai"><svg class="ic" viewBox="0 0 24 24"><path d="M12 20v2" /><path d="M12 2v2" /><path d="M17 20v2" /><path d="M17 2v2" /><path d="M2 12h2" /><path d="M2 17h2" /><path d="M2 7h2" /><path d="M20 12h2" /><path d="M20 17h2" /><path d="M20 7h2" /><path d="M7 20v2" /><path d="M7 2v2" /><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="8" y="8" width="8" height="8" rx="1" /></svg></span>Cost to run</span><span class="redge " data-verb="equals"><i class="shaft"></i></span><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><path d="M12 3v18" /><path d="m19 8 3 8a5 5 0 0 1-6 0zV7" /><path d="M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1" /><path d="m5 8 3 8a5 5 0 0 1-6 0zV7" /><path d="M7 21h10" /></svg></span>True cost</span></div></div></div></div>
+    <p class="caption"><strong>What to notice:</strong> matching on amounts alone produced plenty of output and sent accountants back into the records, including for cases they had already closed. The improvement was a shorter, better-supported queue. The article reports no time-saved figure; the team says that measurement is still to do.</p>
+    <details class="more"><summary>The case behind it</summary><div class="body"><p class="caption" style="margin-top:0">In bank reconciliation for a multi-entity services business, too many proposed matches needed rechecking. Amount-only matching missed timing differences and payments that covered several entries. The team grouped related ledger entries, attached supporting evidence, and separated routine timing differences from unexplained discrepancies, so accepted matches could be traced to source records. Testing with accountants showed which steps still required investigation.</p></div></details>
+  </section>
+  <section id="s5">
+    <div class="lesson">
+      <div class="icw reveal"><svg class="mo xicon r5" data-name="ramp5_rule_change" viewBox="0 0 120 120" role="img" aria-label="A rule moves from version one to version two and three clients' cases are rerun. Client A's wrong rejection becomes a pass; clients B and C stay as they were."><g class="a-all"><g style="transform:translate(60px,16px)"><g class="c a-rb"><rect class="box" x="-27" y="-9" width="54" height="18" rx="9"/><text class="lbl v1 a-v1" y="3.2">RULE V1</text><text class="lbl a-v2" y="3.2">RULE V2</text></g></g><path class="ln sweep a-sw" d="M10 38H110"/><g class="chipo" style="transform:translate(22px,52px)"><rect x="-10" y="-9" width="20" height="18" rx="9"/><text y="3.4">A</text></g><g style="transform:translate(52px,52px)"><g class="lu " style="transform:scale(0.917) translate(-12px,-12px)"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></g></g><g style="transform:translate(88px,52px)"><rect class="plate c a-pl" x="-13" y="-12" width="26" height="24" rx="5"/></g><path class="xm a-x" d="M83 47l10 10M93 47l-10 10"/><path class="ck draw a-k" pathLength="1" d="M82 52l4.5 4.5 8-10"/><g class="chipo" style="transform:translate(22px,76px)"><rect x="-10" y="-9" width="20" height="18" rx="9"/><text y="3.4">B</text></g><g style="transform:translate(52px,76px)"><g class="lu " style="transform:scale(0.917) translate(-12px,-12px)"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></g></g><g style="transform:translate(88px,76px)"><g class="c a-kb"><path class="ck" d="M-6 0l4.5 4.5 8-10"/></g></g><g class="chipo" style="transform:translate(22px,100px)"><rect x="-10" y="-9" width="20" height="18" rx="9"/><text y="3.4">C</text></g><g style="transform:translate(52px,100px)"><g class="lu " style="transform:scale(0.917) translate(-12px,-12px)"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></g></g><g style="transform:translate(88px,100px)"><g class="c a-kc"><path class="ck" d="M-6 0l4.5 4.5 8-10"/></g></g></g></svg></div>
+      <div><p class="eyebrow">Lesson 5</p><h2 class="takeaway">Test a rule change on the cases it should move and the ones it should leave alone</h2><p class="lead">A fix is only safe when the right decisions change and unrelated ones stay the same.</p></div>
+    </div>
+    <div class="reveal"><div class="rows"><div><p class="rowlab">Should change</p><div class="rel"><span class="rnode "><span class="ichip ai"><svg class="ic" viewBox="0 0 24 24"><path d="M15 6a9 9 0 0 0-9 9V3" /><circle cx="18" cy="6" r="3" /><circle cx="6" cy="18" r="3" /></svg></span>Updated allowance: one client, one date</span><span class="redge " data-verb="applies to"><i class="shaft"></i></span><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></svg></span>Eligible requests</span><span class="redge seq" data-verb="rerun"><i class="shaft"></i></span><span class="rnode hu"><span class="ichip hu"><svg class="ic" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5" /></svg></span>Decision changes</span></div></div><div><p class="rowlab">Should not change</p><div class="rel"><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" /><path d="M3 3v5h5" /><path d="M12 7v5l4 2" /></svg></span>Other clients' policies</span><span class="redge " data-verb="still govern"><i class="shaft"></i></span><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><path d="M13 16H8" /><path d="M14 8H8" /><path d="M16 12H8" /><path d="M4 3a1 1 0 0 1 1-1 1.3 1.3 0 0 1 .7.2l.933.6a1.3 1.3 0 0 0 1.4 0l.934-.6a1.3 1.3 0 0 1 1.4 0l.933.6a1.3 1.3 0 0 0 1.4 0l.933-.6a1.3 1.3 0 0 1 1.4 0l.934.6a1.3 1.3 0 0 0 1.4 0l.933-.6A1.3 1.3 0 0 1 19 2a1 1 0 0 1 1 1v18a1 1 0 0 1-1 1 1.3 1.3 0 0 1-.7-.2l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.934.6a1.3 1.3 0 0 1-1.4 0l-.933-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-1.4 0l-.934-.6a1.3 1.3 0 0 0-1.4 0l-.933.6a1.3 1.3 0 0 1-.7.2 1 1 0 0 1-1-1z" /></svg></span>Their requests</span><span class="redge seq" data-verb="rerun"><i class="shaft"></i></span><span class="rnode "><span class="ichip doc"><svg class="ic" viewBox="0 0 24 24"><line x1="5" x2="19" y1="9" y2="9" /><line x1="5" x2="19" y1="15" y2="15" /></svg></span>Decision unchanged</span></div></div></div></div>
+    <p class="caption"><strong>What to notice:</strong> the rerun checks both rows. Versioned rules, with each recommendation linked to its policy evidence, are what make it possible to change one client's allowance without touching anyone else's.</p>
+    <details class="more"><summary>The case behind it</summary><div class="body"><p class="caption" style="margin-top:0">A services company handled expenses and supplier invoices under client-specific policies, amendments and exceptions. A reviewer caught an expense rejection based on an outdated allowance that applied to one client and one effective date. The team had converted approved guidance into versioned rules, so the rejection could be traced to its source and the right version updated. They then reran previously reviewed cases: the amendment applied to eligible requests and other clients stayed under their own policies.</p></div></details>
+  </section>
+  <section id="who">
+    <p class="eyebrow">Across all five</p>
+    <h2 class="takeaway">In every case the AI prepares the evidence and a person keeps the decision</h2>
+    <p class="lead">Read across: the same division of labour shows up in procurement, FP&amp;A, treasury, accounting and expense policy.</p>
+    <div class="reveal scroller"><table class="cmp"><thead><tr><th>Lesson</th><th>Team</th><th>What the workflow prepares</th><th>What a person still decides</th></tr></thead><tbody>
+      <tr><td>1. The question</td><td>Procurement</td><td>A recalculated amount and the supporting contract term for each flag</td><td class="hu">Whether a charge warrants recovery</td></tr>
+      <tr><td>2. Definitions</td><td>Finance</td><td>A repeatable calculation, traceable to its inputs</td><td class="hu">Which costs count and how shared costs are split</td></tr>
+      <tr><td>3. Evidence</td><td>Treasury</td><td>Scenarios, remaining capacity, and why each asset qualified or failed</td><td class="hu">Approval, then execution by authorized staff</td></tr>
+      <tr><td>4. Work left</td><td>Accounting</td><td>Grouped entries with evidence; a smaller exception queue</td><td class="hu">Investigating the unexplained discrepancies</td></tr>
+      <tr><td>5. Rule changes</td><td>Expense policy</td><td>Recommendations linked to versioned policy; a rerun of past cases</td><td class="hu">Catching the outdated allowance and approving the guidance</td></tr>
+    </tbody></table></div>
+    <div class="legend"><span><span class="dot" style="background:var(--ink)"></span>Prepared by the AI workflow</span><span><span class="dot" style="background:var(--hl)"></span>Decided or done by a person</span><span><span class="dot" style="background:var(--mark)"></span>The gap or failure the lesson is about</span></div>
+    <p class="caption"><strong>What to notice:</strong> none of the five workflows makes the final call. Each one is built to shorten the path to a human decision and to make that decision checkable.</p>
+  </section>
+
+  <footer style="margin-top:56px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--faint)">
+    Generated from "5 Lessons From Putting AI to Work With Enterprise Finance Teams" (Ramp, October 26, 2026). Wording is paraphrased; no figures are shown because the source gives none beyond the five lessons. Icons: Lucide (ISC).
+  </footer>
+</div>
+
+<script>
+  /* Light interactivity + motion. Page is fully legible with JS disabled. */
+  (function(){
+    var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* scrollspy nav */
+    var links=[].slice.call(document.querySelectorAll('nav.toc a'));
+    var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'));}).filter(Boolean);
+    if('IntersectionObserver' in window && secs.length){
+      var nav=new IntersectionObserver(function(es){
+        es.forEach(function(e){ if(e.isIntersecting){
+          var id='#'+e.target.id;
+          links.forEach(function(a){a.classList.toggle('active',a.getAttribute('href')===id);});
+        }});
+      },{rootMargin:'-45% 0px -50% 0px'});
+      secs.forEach(function(s){nav.observe(s);});
+    }
+
+    /* reveal-on-scroll + stagger */
+    var rev=[].slice.call(document.querySelectorAll('.reveal,[data-stagger]'));
+    if(RM || !('IntersectionObserver' in window)){
+      rev.forEach(function(e){e.classList.add('in');});
+    } else {
+      var ro=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){
+        var el=e.target;
+        if(el.hasAttribute('data-stagger')){
+          [].slice.call(el.children).forEach(function(c,i){c.style.transitionDelay=(i*80)+'ms';});
+        }
+        el.classList.add('in'); ro.unobserve(el);
+      }});},{rootMargin:'0px 0px -10% 0px'});
+      rev.forEach(function(e){ro.observe(e);});
+    }
+
+    /* svg draw-on */
+    var dp=[].slice.call(document.querySelectorAll('.draw'));
+    dp.forEach(function(p){ try{ if(p.getTotalLength){p.style.setProperty('--len',Math.ceil(p.getTotalLength()));} }catch(e){} });
+    if(RM || !('IntersectionObserver' in window)){ dp.forEach(function(p){p.classList.add('in');}); }
+    else { var dio=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){e.target.classList.add('in');dio.unobserve(e.target);} });},{rootMargin:'0px 0px -10% 0px'});
+      dp.forEach(function(p){dio.observe(p);}); }
+
+    /* count-up */
+    var nums=[].slice.call(document.querySelectorAll('[data-count]'));
+    var run=function(el){var t=parseFloat(el.getAttribute('data-count'))||0,d=900,s=null;
+      var step=function(ts){if(!s)s=ts;var p=Math.min((ts-s)/d,1);
+        el.textContent=(t%1?(p*t).toFixed(1):Math.round(p*t));
+        if(p<1)requestAnimationFrame(step);};requestAnimationFrame(step);};
+    if(RM || !('IntersectionObserver' in window)){ nums.forEach(function(e){e.textContent=e.getAttribute('data-count');}); }
+    else { var cio=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){run(e.target);cio.unobserve(e.target);} });});
+      nums.forEach(function(e){e.textContent='0';cio.observe(e);}); }
+
+    /* flow-dot: travel a dot along an SVG path (direction of dependency/flow) */
+    var dots=[].slice.call(document.querySelectorAll('.flow-dot[data-follow]'));
+    if(!RM && 'IntersectionObserver' in window){
+      dots.forEach(function(dot){
+        var path=document.querySelector(dot.getAttribute('data-follow'));
+        if(!path || !path.getTotalLength) return;
+        var len=path.getTotalLength(), dur=2800, raf=null;
+        var loop=function(t0){ return function(ts){
+          var p=((ts-t0)%dur)/dur, pt=path.getPointAtLength(p*len);
+          dot.setAttribute('cx',pt.x); dot.setAttribute('cy',pt.y);
+          raf=requestAnimationFrame(loop(t0)); };};
+        var io=new IntersectionObserver(function(es){es.forEach(function(e){
+          if(e.isIntersecting){ if(!raf){dot.classList.add('on');requestAnimationFrame(function(ts){loop(ts)(ts);});} }
+          else if(raf){cancelAnimationFrame(raf);raf=null;dot.classList.remove('on');}
+        });});
+        io.observe(path.closest('svg')||path);
+      });
+    }
+
+    /* decision branch: after the section reveals, dim the rejected path (.br-off) */
+    var brs=[].slice.call(document.querySelectorAll('[data-branch]'));
+    if(RM || !('IntersectionObserver' in window)){ brs.forEach(function(b){b.classList.add('decided');}); }
+    else { var bio=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting){
+        (function(el){setTimeout(function(){el.classList.add('decided');},700);})(e.target);
+        bio.unobserve(e.target);} });},{rootMargin:'0px 0px -15% 0px'});
+      brs.forEach(function(b){bio.observe(b);}); }
+
+    /* hover-to-trace: hover/focus a [data-node] → highlight its edges + neighbors, dim the rest */
+    [].slice.call(document.querySelectorAll('[data-trace]')).forEach(function(box){
+      var nodes=[].slice.call(box.querySelectorAll('[data-node]'));
+      var links=[].slice.call(box.querySelectorAll('[data-link]'));
+      var clear=function(){ box.classList.remove('tracing');
+        nodes.concat(links).forEach(function(el){el.classList.remove('hot');}); };
+      nodes.forEach(function(n){
+        var id=n.getAttribute('data-node');
+        var on=function(){ clear(); box.classList.add('tracing'); n.classList.add('hot');
+          links.forEach(function(l){ var pair=l.getAttribute('data-link').split(/\s+/);
+            if(pair.indexOf(id)>-1){ l.classList.add('hot');
+              pair.forEach(function(other){ if(other!==id){ var m=box.querySelector('[data-node="'+other+'"]'); if(m)m.classList.add('hot'); } }); } }); };
+        n.addEventListener('mouseenter',on); n.addEventListener('focusin',on);
+        n.addEventListener('mouseleave',clear); n.addEventListener('focusout',clear);
+      });
+    });
+  })();
+</script>
+</body>
+</html>
